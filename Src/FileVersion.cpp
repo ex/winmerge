@@ -4,6 +4,7 @@
  * @brief Implementation for FileVersion
  */
 
+#include "pch.h"
 #include "FileVersion.h"
 #include "UnicodeString.h"
 
@@ -19,25 +20,6 @@ FileVersion::FileVersion()
 : m_fileVersionMS(0xffffffff)
 , m_fileVersionLS(0xffffffff)
 {
-}
-
-/**
- * @brief Reset version data to zeroes.
- */
-void FileVersion::Clear()
-{
-	m_fileVersionMS = m_fileVersionLS = 0xffffffff;
-}
-
-/**
- * @brief Set file version number.
- * @param [in] versionMS Most significant dword for version.
- * @param [in] versionLS Least significant dword for version.
- */
-void FileVersion::SetFileVersion(unsigned versionMS, unsigned versionLS)
-{
-	m_fileVersionMS = versionMS;
-	m_fileVersionLS = versionLS;
 }
 
 /**

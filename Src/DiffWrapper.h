@@ -30,6 +30,7 @@
 #include "CompareOptions.h"
 #include "DiffList.h"
 #include "UnicodeString.h"
+#include "FileTransform.h"
 
 class CDiffContext;
 class PrediffingInfo;
@@ -129,12 +130,12 @@ typedef enum {
  */
 struct DIFFSTATUS
 {
-	bool bMissingNL[3]; /**< file is missing EOL before EOF */
-	bool bBinaries; /**< Files are binaries */
-	IDENTLEVEL Identical; /**< diffutils said files are identical */
-	bool bPatchFileFailed; /**< Creating patch file failed */
+	bool bMissingNL[3] {}; /**< file is missing EOL before EOF */
+	bool bBinaries = false; /**< Files are binaries */
+	IDENTLEVEL Identical = IDENTLEVEL_NONE; /**< diffutils said files are identical */
+	bool bPatchFileFailed = false; /**< Creating patch file failed */
 
-	DIFFSTATUS() { memset(this, 0, sizeof(*this)); } // start out with all flags clear
+	DIFFSTATUS() {}
 	void MergeStatus(const DIFFSTATUS& other)
 	{
 		if (Identical == IDENTLEVEL_ALL)
@@ -180,7 +181,6 @@ public:
 	void SetAppendFiles(bool bAppendFiles);
 	void SetPaths(const PathContext &files, bool tempPaths);
 	void SetAlternativePaths(const PathContext &altPaths);
-	void SetCodepage(int codepage) { m_codepage = codepage; }
 	bool RunFileDiff();
 	void GetDiffStatus(DIFFSTATUS *status) const;
 	void AddDiffRange(DiffList *pDiffList, unsigned begin0, unsigned end0, unsigned begin1, unsigned end1, OP_TYPE op);
@@ -236,9 +236,55 @@ private:
 	bool m_bAddCmdLine; /**< Do we add commandline to patch file? */
 	bool m_bAppendFiles; /**< Do we append to existing patch file? */
 	int m_nDiffs; /**< Difference count */
-	int m_codepage; /**< Codepage used in line filter */
 	DiffList *m_pDiffList; /**< Pointer to external DiffList */
 	std::unique_ptr<MovedLines> m_pMovedLines[3];
 	const FilterCommentsManager* m_pFilterCommentsManager; /**< Comments filtering manager */
 	bool m_bPluginsEnabled; /**< Are plugins enabled? */
 };
+
+/**
+ * @brief Set text tested to find the prediffer automatically.
+ * Most probably a concatenated string of both filenames.
+ */
+inline void CDiffWrapper::SetTextForAutomaticPrediff(const String &text)
+{
+	m_sToFindPrediffer = text;
+}
+
+inline void CDiffWrapper::GetPrediffer(PrediffingInfo * prediffer) const
+{
+	*prediffer = *m_infoPrediffer;
+}
+
+/**
+ * @brief Set plugins enabled/disabled.
+ * @param [in] enable if true plugins are enabled.
+ */
+inline void CDiffWrapper::EnablePlugins(bool enable)
+{
+	m_bPluginsEnabled = enable;
+}
+
+/**
+ * @brief Set source paths for original (NON-TEMP) diffing two files.
+ * Sets full paths to two (NON-TEMP) files we are diffing.
+ * @param [in] OriginalFile1 First file to compare "(NON-TEMP) file".
+ * @param [in] OriginalFile2 Second file to compare "(NON-TEMP) file".
+ */
+inline void CDiffWrapper::SetCompareFiles(const PathContext &originalFile)
+{
+	m_originalFile = originalFile;
+}
+
+/**
+ * @brief Set alternative paths for compared files.
+ * Sets alternative paths for diff'ed files. These alternative paths might not
+ * be real paths. For example when creating a patch file from folder compare
+ * we want to use relative paths.
+ * @param [in] altPaths Alternative file paths.
+ */
+inline void CDiffWrapper::SetAlternativePaths(const PathContext &altPaths)
+{
+	m_alternativePaths = altPaths;
+}
+

@@ -70,6 +70,8 @@ public:
 
 	enum output_style m_outputStyle; /**< Patch style (context, unified etc.) */
 	int m_contextLines; /**< How many context lines are added. */
+	enum DiffAlgorithm m_diffAlgorithm;
+	bool m_indentHeuristic;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -90,8 +92,8 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CPatchDlg)
-	virtual void OnOK();
-	virtual BOOL OnInitDialog();
+	virtual void OnOK() override;
+	virtual BOOL OnInitDialog() override;
 	afx_msg void OnDiffBrowseFile1();
 	afx_msg void OnDiffBrowseFile2();
 	afx_msg void OnDiffBrowseResult();
@@ -101,3 +103,40 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
+
+/** 
+ * @brief Add patch item to internal list.
+ * @param [in] pf Patch item to add.
+ */
+inline void CPatchDlg::AddItem(const PATCHFILES& pf)
+{
+	m_fileList.push_back(pf);
+}
+
+/** 
+ * @brief Returns amount of patch items in the internal list.
+ * @return Count of patch items in the list.
+ */
+inline size_t CPatchDlg::GetItemCount()
+{
+	return m_fileList.size();
+}
+
+/** 
+ * @brief Return item in the internal list at given position
+ * @param [in] position Zero-based index of item to get
+ * @return PATCHFILES from given position.
+ */
+inline const PATCHFILES& CPatchDlg::GetItemAt(size_t position)
+{
+	return m_fileList.at(position);
+}
+
+/** 
+ * @brief Empties internal item list.
+ */
+inline void CPatchDlg::ClearItems()
+{
+	m_fileList.clear();
+}
+

@@ -5,6 +5,7 @@
  *
  */
 
+#include "pch.h"
 #include "PathContext.h"
 #include <cassert>
 #include "paths.h"
@@ -27,25 +28,6 @@ String PathInfo::GetPath(bool bNormalized /*= true*/) const
 		return paths::AddTrailingSlash(m_sPath);
 	else
 		return m_sPath;
-}
-
-String& PathInfo::GetRef()
-{ 
-	return m_sPath;
-}
-
-/**
- * @brief Set path.
- * @param [in] sPath New path for item.
- */
-void PathInfo::SetPath(const TCHAR *sPath)
-{
-	m_sPath = sPath;
-}
-
-void PathInfo::SetPath(const String & sPath)
-{
-	m_sPath = sPath;
 }
 
 /**
@@ -111,32 +93,6 @@ void PathContext::SetAt(int nIndex, const String& newElement)
 {
 	assert(nIndex < m_nFiles);
 	m_path[nIndex].SetPath(newElement);
-}
-
-String PathContext::operator[](int nIndex) const
-{
-	return GetAt(nIndex);
-}
-
-String& PathContext::operator[](int nIndex)
-{
-	return GetElement(nIndex);
-}
-
-/**
- * @brief set number of files.
- */
-void PathContext::SetSize(int nFiles)
-{
-	m_nFiles = nFiles;
-}
-
-/**
- * @brief Return number of files.
- */
-int PathContext::GetSize() const
-{
-	return m_nFiles;
 }
 
 /**
@@ -261,19 +217,3 @@ void PathContext::Swap()
 	else
 		m_path[0].m_sPath.swap(m_path[2].m_sPath);
 }
-
-PathContextIterator PathContext::begin() const
-{
-	return PathContextIterator(this);
-}
-
-PathContextIterator PathContext::end() const
-{
-	return PathContextIterator();
-}
-
-size_t PathContext::size() const
-{
-	return m_nFiles;
-}
-

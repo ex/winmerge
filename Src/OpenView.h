@@ -31,7 +31,6 @@
 #include "SuperComboBox.h"
 #include "FileTransform.h"
 #include "PathContext.h"
-#include "Picture.h"
 #include "CMoveConstraint.h"
 #include "TrDialogs.h"
 #include <array>
@@ -87,7 +86,7 @@ public:
 private:
 	String m_strBrowsePath[3]; /**< Left/middle/right path from browse dialog. */
 	CWinThread *m_pUpdateButtonStatusThread;
-	CPicture m_picture; /**< Image loader/viewer for logo image */
+	ATL::CImage m_image; /**< Image loader/viewer for logo image */
 	CSize m_sizeOrig;
 	prdlg::CMoveConstraint m_constraint;
 	CFont m_fontSwapButton;
@@ -135,6 +134,7 @@ protected:
 	afx_msg void OnDragBeginPathCombo(UINT id, NMHDR *pNMHDR, LRESULT *pResult);
 	template<int id1, int id2>
 	afx_msg void OnSwapButton();
+	template <int N>
 	afx_msg void OnEditEvent();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnSelectUnpacker();

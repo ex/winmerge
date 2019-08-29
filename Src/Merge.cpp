@@ -42,7 +42,7 @@
 #include "HexMergeView.h"
 #include "AboutDlg.h"
 #include "MainFrm.h"
-#include "ChildFrm.h"
+#include "MergeEditFrm.h"
 #include "DirFrame.h"
 #include "MergeDoc.h"
 #include "DirDoc.h"
@@ -206,7 +206,7 @@ BOOL CMergeApp::InitInstance()
 	ApplyCommandLineConfigOptions(cmdInfo);
 	if (cmdInfo.m_sErrorMessages.size() > 0)
 	{
-		if (AttachConsole(static_cast<DWORD>(-1)))
+		if (AttachConsole(ATTACH_PARENT_PROCESS))
 		{
 			DWORD dwWritten;
 			for (auto& msg : cmdInfo.m_sErrorMessages)
@@ -282,8 +282,8 @@ BOOL CMergeApp::InitInstance()
 	charsets_init();
 	UpdateCodepageModule();
 
-	FileTransform::g_UnpackerMode = static_cast<PLUGIN_MODE>(theApp.GetProfileInt(_T("Settings"), _T("UnpackerMode"), PLUGIN_MANUAL));
-	FileTransform::g_PredifferMode = static_cast<PLUGIN_MODE>(theApp.GetProfileInt(_T("Settings"), _T("PredifferMode"), PLUGIN_MANUAL));
+	FileTransform::g_UnpackerMode = static_cast<PLUGIN_MODE>(GetOptionsMgr()->GetInt(OPT_PLUGINS_UNPACKER_MODE));
+	FileTransform::g_PredifferMode = static_cast<PLUGIN_MODE>(GetOptionsMgr()->GetInt(OPT_PLUGINS_PREDIFFER_MODE));
 
 	NONCLIENTMETRICS ncm = { sizeof NONCLIENTMETRICS };
 	if (SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof NONCLIENTMETRICS, &ncm, 0))
@@ -363,7 +363,7 @@ BOOL CMergeApp::InitInstance()
 	m_pDiffTemplate = new CMultiDocTemplate(
 		IDR_MERGEDOCTYPE,
 		RUNTIME_CLASS(CMergeDoc),
-		RUNTIME_CLASS(CChildFrame), // custom MDI child frame
+		RUNTIME_CLASS(CMergeEditFrame), // custom MDI child frame
 		RUNTIME_CLASS(CMergeEditSplitterView));
 	AddDocTemplate(m_pDiffTemplate);
 
@@ -474,15 +474,15 @@ int CMergeApp::ExitInstance()
 	return 0;
 }
 
-int CMergeApp::DoMessageBox( LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt )
+int CMergeApp::DoMessageBox(LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt)
 {
 	// This is a convenient point for breakpointing !!!
 
 	// Create a handle to store the parent window of the message box.
 	CWnd* pParentWnd = CWnd::GetActiveWindow();
-	
+
 	// Check whether an active window was retrieved successfully.
-	if ( pParentWnd == nullptr )
+	if (pParentWnd == nullptr)
 	{
 		// Try to retrieve a handle to the last active popup.
 		CWnd * mainwnd = GetMainWnd();
@@ -495,7 +495,16 @@ int CMergeApp::DoMessageBox( LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt )
 	// (if caller set the style)
 
 	if (m_bNonInteractive)
+	{
+		if (AttachConsole(ATTACH_PARENT_PROCESS))
+		{
+			DWORD dwWritten;
+			String line = _T("WinMerge: ") + String(lpszPrompt) + _T("\n");
+			WriteConsole(GetStdHandle(STD_OUTPUT_HANDLE), line.c_str(), static_cast<DWORD>(line.length()), &dwWritten, nullptr);
+			FreeConsole();
+		}
 		return IDCANCEL;
+	}
 
 	// Create the message box dialog.
 	CMessageBoxDialog dlgMessage(pParentWnd, lpszPrompt, _T(""), nType | MB_RIGHT_ALIGN,
@@ -506,15 +515,6 @@ int CMergeApp::DoMessageBox( LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt )
 
 	// Display the message box dialog and return the result.
 	return static_cast<int>(dlgMessage.DoModal());
-}
-
-/** 
- * @brief Set flag so that application will broadcast notification at next
- * idle time (via WM_TIMER id=IDLE_TIMER)
- */
-void CMergeApp::SetNeedIdleTimer()
-{
-	m_bNeedIdleTimer = true; 
 }
 
 bool CMergeApp::IsReallyIdle() const
@@ -561,11 +561,11 @@ BOOL CMergeApp::OnIdle(LONG lCount)
  */
 void CMergeApp::InitializeFileFilters()
 {
-	CString filterPath = GetProfileString(_T("Settings"), _T("UserFilterPath"), _T(""));
+	String filterPath = GetOptionsMgr()->GetString(OPT_FILTER_USERPATH);
 
-	if (!filterPath.IsEmpty())
+	if (!filterPath.empty())
 	{
-		m_pGlobalFileFilter->SetUserFilterPath((LPCTSTR)filterPath);
+		m_pGlobalFileFilter->SetUserFilterPath(filterPath);
 	}
 	m_pGlobalFileFilter->LoadAllFileFilters();
 }
@@ -1110,47 +1110,53 @@ bool CMergeApp::LoadAndOpenProjectFile(const String& sProject, const String& sRe
 	if (!LoadProjectFile(sProject, project))
 		return false;
 	
-	PathContext tFiles;
-	bool bLeftReadOnly = false;
-	bool bMiddleReadOnly = false;
-	bool bRightReadOnly = false;
-	bool bRecursive = false;
-	project.GetPaths(tFiles, bRecursive);
-	bLeftReadOnly = project.GetLeftReadOnly();
-	bMiddleReadOnly = project.GetMiddleReadOnly();
-	bRightReadOnly = project.GetRightReadOnly();
-	if (project.HasFilter())
+	bool rtn = true;
+	for (auto& projItem : project.Items())
 	{
-		String filter = project.GetFilter();
-		filter = strutils::trim_ws(filter);
-		m_pGlobalFileFilter->SetFilter(filter);
-	}
-	if (project.HasSubfolders())
-		bRecursive = project.GetSubfolders() > 0;
+		PathContext tFiles;
+		bool bRecursive = false;
+		projItem.GetPaths(tFiles, bRecursive);
+		for (int i = 0; i < tFiles.GetSize(); ++i)
+		{
+			if (!paths::IsPathAbsolute(tFiles[i]))
+				tFiles[i] = paths::ConcatPath(paths::GetParentPath(sProject), tFiles[i]);
+		}
+		bool bLeftReadOnly = projItem.GetLeftReadOnly();
+		bool bMiddleReadOnly = projItem.GetMiddleReadOnly();
+		bool bRightReadOnly = projItem.GetRightReadOnly();
+		if (projItem.HasFilter())
+		{
+			String filter = projItem.GetFilter();
+			filter = strutils::trim_ws(filter);
+			m_pGlobalFileFilter->SetFilter(filter);
+		}
+		if (projItem.HasSubfolders())
+			bRecursive = projItem.GetSubfolders() > 0;
 
-	DWORD dwFlags[3] = {
-		static_cast<DWORD>(tFiles.GetPath(0).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT),
-		static_cast<DWORD>(tFiles.GetPath(1).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT),
-		static_cast<DWORD>(tFiles.GetPath(2).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT)
-	};
-	if (bLeftReadOnly)
-		dwFlags[0] |= FFILEOPEN_READONLY;
-	if (tFiles.GetSize() == 2)
-	{
-		if (bRightReadOnly)
-			dwFlags[1] |= FFILEOPEN_READONLY;
-	}
-	else
-	{
-		if (bMiddleReadOnly)
-			dwFlags[1] |= FFILEOPEN_READONLY;
-		if (bRightReadOnly)
-			dwFlags[2] |= FFILEOPEN_READONLY;
-	}
+		DWORD dwFlags[3] = {
+			static_cast<DWORD>(tFiles.GetPath(0).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT),
+			static_cast<DWORD>(tFiles.GetPath(1).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT),
+			static_cast<DWORD>(tFiles.GetPath(2).empty() ? FFILEOPEN_NONE : FFILEOPEN_PROJECT)
+		};
+		if (bLeftReadOnly)
+			dwFlags[0] |= FFILEOPEN_READONLY;
+		if (tFiles.GetSize() == 2)
+		{
+			if (bRightReadOnly)
+				dwFlags[1] |= FFILEOPEN_READONLY;
+		}
+		else
+		{
+			if (bMiddleReadOnly)
+				dwFlags[1] |= FFILEOPEN_READONLY;
+			if (bRightReadOnly)
+				dwFlags[2] |= FFILEOPEN_READONLY;
+		}
 
-	GetOptionsMgr()->SaveOption(OPT_CMP_INCLUDE_SUBDIRS, bRecursive);
-	
-	bool rtn = GetMainFrame()->DoFileOpen(&tFiles, dwFlags, nullptr, sReportFile, bRecursive);
+		GetOptionsMgr()->SaveOption(OPT_CMP_INCLUDE_SUBDIRS, bRecursive);
+
+		rtn &= GetMainFrame()->DoFileOpen(&tFiles, dwFlags, nullptr, sReportFile, bRecursive);
+	}
 
 	AddToRecentProjectsMRU(sProject.c_str());
 	return rtn;
@@ -1330,6 +1336,15 @@ BOOL CMergeApp::WriteProfileString(LPCTSTR lpszSection, LPCTSTR lpszEntry, LPCTS
 		if (!pOptions->Get(name).IsString())
 			pOptions->InitOption(name, lpszValue ? lpszValue : _T(""));
 		return pOptions->SaveOption(name, lpszValue ? lpszValue : _T("")) == COption::OPT_OK;
+	}
+	else
+	{
+		for (auto& name : pOptions->GetNameList())
+		{
+			if (name.find(lpszSection) == 0)
+				pOptions->RemoveOption(name);
+		}
+
 	}
 	return TRUE;
 }

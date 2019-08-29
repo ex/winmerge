@@ -119,7 +119,7 @@ DATE:		BY:					DESCRIPTION:
 static __declspec(thread) Merge7z::Proxy m_Merge7z =
 {
 	{ 0, 0, DllBuild_Merge7z, },
-	"Merge7z\\Merge7z%u%02u" DECORATE_U ".dll",
+	"Merge7z\\Merge7z.dll",
 	"Merge7z",
 	nullptr
 };
@@ -288,9 +288,7 @@ interface Merge7z *Merge7z::Proxy::operator->()
 			throw new CResourceException();
 		if (DWORD ver = VersionOf7z())
 		{
-			char name[MAX_PATH];
-			wsprintfA(name, format, UINT HIWORD(ver), UINT LOWORD(ver));
-			Merge7z[0] = name;
+			Merge7z[0] = format;
 			stub.Load();
 		}
 		else
@@ -543,9 +541,6 @@ void DirItemEnumerator::CompressArchive(LPCTSTR path)
 	String strPath;
 	if (path == nullptr)
 	{
-		// No path given, so prompt for path!
-		static const TCHAR _T_Merge7z[] = _T("Merge7z");
-		static const TCHAR _T_FilterIndex[] = _T("FilterIndex");
 		// 7z311 can only write 7z, zip, and tar(.gz|.bz2) archives, so don't
 		// offer other formats here!
 		static const TCHAR _T_Filter[]
@@ -584,7 +579,7 @@ void DirItemEnumerator::CompressArchive(LPCTSTR path)
 			OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_NOREADONLYRETURN,
 			strFilter.c_str()
 		);
-		dlg.m_ofn.nFilterIndex = AfxGetApp()->GetProfileInt(_T_Merge7z, _T_FilterIndex, 1);
+		dlg.m_ofn.nFilterIndex = GetOptionsMgr()->GetInt(OPT_ARCHIVE_FILTER_INDEX);
 		// Use extension from current filter as default extension:
 		if (int i = dlg.m_ofn.nFilterIndex)
 		{
@@ -603,7 +598,7 @@ void DirItemEnumerator::CompressArchive(LPCTSTR path)
 		{
 			strPath = dlg.GetPathName();
 			path = strPath.c_str();
-			AfxGetApp()->WriteProfileInt(_T_Merge7z, _T_FilterIndex, dlg.m_ofn.nFilterIndex);
+			GetOptionsMgr()->SaveOption(OPT_ARCHIVE_FILTER_INDEX, static_cast<int>(dlg.m_ofn.nFilterIndex));
 		}
 	}
 	if (path && !MultiStepCompressArchive(path))
@@ -637,7 +632,7 @@ DecompressResult DecompressArchive(HWND hWnd, const PathContext& files)
 					break;
 				if (res.files[0].find(path) == 0)
 				{
-					VERIFY(::DeleteFile(res.files[0].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[0].c_str())), false));
+					VERIFY(::DeleteFile(res.files[0].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[0])), false));
 				}
 				BSTR pTmp = piHandler->GetDefaultName(hWnd, res.files[0].c_str());
 				res.files[0] = OLE2T(pTmp);
@@ -665,7 +660,7 @@ DecompressResult DecompressArchive(HWND hWnd, const PathContext& files)
 					break;;
 				if (res.files[1].find(path) == 0)
 				{
-					VERIFY(::DeleteFile(res.files[1].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[1].c_str())), false));
+					VERIFY(::DeleteFile(res.files[1].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[1])), false));
 				}
 				BSTR pTmp = piHandler->GetDefaultName(hWnd, res.files[1].c_str());
 				res.files[1] = OLE2T(pTmp);
@@ -692,7 +687,7 @@ DecompressResult DecompressArchive(HWND hWnd, const PathContext& files)
 					break;;
 				if (res.files[2].find(path) == 0)
 				{
-					VERIFY(::DeleteFile(res.files[2].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[2].c_str())), false));
+					VERIFY(::DeleteFile(res.files[2].c_str()) || (LogErrorString(strutils::format(_T("DeleteFile(%s) failed"), res.files[2])), false));
 				}
 				BSTR pTmp = piHandler->GetDefaultName(hWnd, res.files[1].c_str());
 				res.files[2] = OLE2T(pTmp);

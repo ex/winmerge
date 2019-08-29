@@ -69,9 +69,9 @@
 
         <listitem>
           <para>Open your Web browser to <ulink
-          url="http://winmerge.org/">winmerge.org</ulink>. Under <ulink
-          url="http://winmerge.org/docs/">Documentation</ulink>, follow the
-          <ulink url="http://manual.winmerge.org/">Manual</ulink> link to
+          url="https://winmerge.org/">winmerge.org</ulink>. Under <ulink
+          url="https://winmerge.org/docs/">Documentation</ulink>, follow the
+          <ulink url="https://manual.winmerge.org/">Manual</ulink> link to
           the latest Help version.</para>
         </listitem>
       </varlistentry>
@@ -109,6 +109,22 @@
         <listitem>
           <para>Explains the file comparison/merge window, available operations,
           methods of navigation, and modes.</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><xref linkend="Compare_images" /></term>
+
+        <listitem>
+          <para>TBD</para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term><xref linkend="Compare_bin" /></term>
+
+        <listitem>
+          <para>TBD</para>
         </listitem>
       </varlistentry>
 
@@ -170,7 +186,7 @@
           developers.</para>
 
           <para>Before submitting questions to <ulink
-          url="http://sourceforge.net/projects/winmerge/">SourceForge.net</ulink>,
+          url="https://sourceforge.net/projects/winmerge/">SourceForge.net</ulink>,
           please check the <xref linkend="Faq" /> topic first to see if your
           question is answered there.</para>
         </listitem>

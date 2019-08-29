@@ -34,6 +34,7 @@
 //  Forward class declarations
 
 class CEditDropTargetImpl;
+class CEditReplaceDlg;
 
 /////////////////////////////////////////////////////////////////////////////
 //  CCrystalEditView view
@@ -59,6 +60,7 @@ public :
 protected:
     bool m_bLastReplace;
     DWORD m_dwLastReplaceFlags;
+    CEditReplaceDlg *m_pEditReplaceDlg;
 
 protected:
     bool m_bDropPosVisible;
@@ -75,20 +77,20 @@ private :
 
 
 public :
-    virtual void ResetView ();
+    virtual void ResetView () override;
 protected :
 
 
 
 
     CEditDropTargetImpl * m_pDropTarget;
-    virtual DROPEFFECT GetDropEffect ();
-    virtual void OnDropSource (DROPEFFECT de);
+    virtual DROPEFFECT GetDropEffect () override;
+    virtual void OnDropSource (DROPEFFECT de) override;
     void Paste ();
     void Cut ();
     bool DeleteCurrentSelection ();
     bool DeleteCurrentColumnSelection (int nAction, bool bFlushUndoGroup = true, bool bUpdateCursorPosition = true);
-	bool DeleteCurrentColumnSelection2 (int nStartLine, int nEndLine, int nAction);
+    bool DeleteCurrentColumnSelection2 (int nStartLine, int nEndLine, int nAction);
     bool InsertColumnText (int nLine, int nPos, LPCTSTR pszText, int cchText, int nAction, bool bFlushUndoGroup = true);
 
     // Attributes
@@ -119,13 +121,14 @@ public :
     void DoDragScroll (const CPoint & point);
 
     virtual bool QueryEditable ();
-    virtual void UpdateView (CCrystalTextView * pSource, CUpdateContext * pContext, DWORD dwFlags, int nLineIndex = -1);
+    virtual void UpdateView (CCrystalTextView * pSource, CUpdateContext * pContext, DWORD dwFlags, int nLineIndex = -1) override;
 
-    bool ReplaceSelection (LPCTSTR pszNewText, size_t cchNewText, DWORD dwFlags);
+    void SaveLastSearch(LastSearchInfos *lastSearch);
+    bool ReplaceSelection (LPCTSTR pszNewText, size_t cchNewText, DWORD dwFlags, bool bGroupWithPrevious = false);
 
-    virtual void OnEditOperation (int nAction, LPCTSTR pszText, size_t cchText);
+    virtual void OnEditOperation (int nAction, LPCTSTR pszText, size_t cchText) override;
 
-    virtual bool DoSetTextType (TextDefinition *def);
+    virtual bool DoSetTextType (TextDefinition *def) override;
 
     // Overrides
     // ClassWizard generated virtual function overrides
@@ -137,7 +140,7 @@ protected :
 
     // Generated message map functions
 protected :
-	  bool m_bMergeUndo;
+    bool m_bMergeUndo;
     //{{AFX_MSG(CCrystalEditView)
     afx_msg void OnEditPaste ();
     afx_msg void OnUpdateEditCut (CCmdUI * pCmdUI);
@@ -176,17 +179,17 @@ protected :
     afx_msg void OnUpdateIndicatorCol (CCmdUI * pCmdUI);
     afx_msg void OnUpdateIndicatorOvr (CCmdUI * pCmdUI);
     afx_msg void OnUpdateIndicatorRead (CCmdUI * pCmdUI);
-	//BEGIN SW
-	afx_msg void OnUpdateEditGotoLastChange(CCmdUI* pCmdUI);
-	afx_msg void OnEditGotoLastChange();
-	//END SW
-	afx_msg void OnUpdateToolsSpelling (CCmdUI * pCmdUI);
-	afx_msg void OnToolsSpelling ();
-	afx_msg void OnUpdateToolsCharCoding (CCmdUI * pCmdUI);
-	afx_msg void OnToolsCharCoding ();
-	afx_msg void OnEditDeleteWord ();
-	afx_msg void OnEditDeleteWordBack ();
-	// cursor movement
+    //BEGIN SW
+    afx_msg void OnUpdateEditGotoLastChange(CCmdUI* pCmdUI);
+    afx_msg void OnEditGotoLastChange();
+    //END SW
+    afx_msg void OnUpdateToolsSpelling (CCmdUI * pCmdUI);
+    afx_msg void OnToolsSpelling ();
+    afx_msg void OnUpdateToolsCharCoding (CCmdUI * pCmdUI);
+    afx_msg void OnToolsCharCoding ();
+    afx_msg void OnEditDeleteWord ();
+    afx_msg void OnEditDeleteWordBack ();
+    // cursor movement
     afx_msg void OnCharLeft();
     afx_msg void OnExtCharLeft();
     afx_msg void OnCharRight();

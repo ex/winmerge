@@ -5,18 +5,20 @@
  *
  */
 
+#include "pch.h"
 #include "coretools.h"
+
+static bool iseolch(char ch)
+{
+	return ch == '\n' || ch == '\r';
+}
 
 size_t linelen(const char *string, size_t maxlen)
 {
-	size_t stringlen = 0;
-	while (stringlen < maxlen)
+	const char *q = string + maxlen;
+	do
 	{
-		char c = string[stringlen];
-		if (c == '\r' || c == '\n' || c == '\0')
-			break;
-		++stringlen;
-	}
-	return stringlen;
+		maxlen = q - string;
+	} while (maxlen && iseolch(*--q));
+	return maxlen;
 }
-

@@ -28,6 +28,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+#include "pch.h"
 #include "UniFile.h"
 #include <cstdio>
 #include <cassert>
@@ -52,32 +53,6 @@ static void Append(String &strBuffer, const TCHAR *pchTail, size_t cchTail,
 UniFile::UniError::UniError()
 {
 	ClearError();
-}
-
-/**
- * @brief Check if there is error.
- * @return true if there is an error.
- */
-bool UniFile::UniError::HasError() const
-{
-	return !desc.empty();
-}
-
-/**
- * @brief Clears the existing error.
- */
-void UniFile::UniError::ClearError()
-{
-	desc.erase();
-}
-
-/**
- * @brief Get the error string.
- * @return Error string.
- */
-String UniFile::UniError::GetError() const
-{
-	return desc;
 }
 
 /////////////
@@ -188,10 +163,7 @@ UniMemFile::UniMemFile()
 void UniMemFile::Close()
 {
 	Clear();
-	if (m_base != nullptr)
-	{
-		m_base = nullptr;
-	}
+	m_base = nullptr;
 	m_data = nullptr;
 	m_current = nullptr;
 	if (m_hMapping != nullptr)
@@ -199,15 +171,6 @@ void UniMemFile::Close()
 		delete m_hMapping;
 		m_hMapping = nullptr;
 	}
-}
-
-/** @brief Is it currently attached to a file ? */
-bool UniMemFile::IsOpen() const
-{
-	// We don't test the handle here, because we allow "opening" empty file
-	// but memory-mapping doesn't work on that, so that uses a special state
-	// of no handle, but linenumber of 0
-	return m_lineno >= 0;
 }
 
 /** @brief Get file status into member variables */
@@ -354,24 +317,6 @@ bool UniMemFile::ReadBom()
 	m_current = m_data;
 	m_bUnicodingChecked = true;
 	return unicode;
-}
-
-/**
- * @brief Returns if file has a BOM bytes.
- * @return true if file has BOM bytes, false otherwise.
- */
-bool UniMemFile::HasBom() const
-{
-	return m_bom;
-}
-
-/**
- * @brief Sets if file has BOM or not.
- * @param [in] true to have a BOM in file, false to not to have.
- */
-void UniMemFile::SetBom(bool bom)
-{
-	m_bom = bom;
 }
 
 /**
@@ -731,12 +676,6 @@ void UniStdioFile::Close()
 	m_txtstats.clear();
 }
 
-/** @brief Is it currently attached to a file ? */
-bool UniStdioFile::IsOpen() const
-{
-	return m_fp != 0;
-}
-
 /** @brief Get file status into member variables */
 bool UniStdioFile::GetFileStatus()
 {
@@ -862,25 +801,6 @@ bool UniStdioFile::ReadBom()
 	m_bom = bom;
 	return unicode;
 }
-
-/**
- * @brief Returns if file has a BOM bytes.
- * @return true if file has BOM bytes, false otherwise.
- */
-bool UniStdioFile::HasBom() const
-{
-	return m_bom;
-}
-
-/**
- * @brief Sets if file has BOM or not.
- * @param [in] true to have a BOM in file, false to not to have.
- */
-void UniStdioFile::SetBom(bool bom)
-{
-	m_bom = bom;
-}
-
 
 bool UniStdioFile::ReadString(String & line, bool * lossy)
 {

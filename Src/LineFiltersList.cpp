@@ -4,6 +4,7 @@
  * @brief Implementation for LineFiltersList class.
  */
 
+#include "pch.h"
 #include "LineFiltersList.h"
 #include <vector>
 #include <cassert>
@@ -41,23 +42,6 @@ void LineFiltersList::AddFilter(const String& filter, bool enabled)
 	item->enabled = enabled;
 	item->filterStr = filter;
 	m_items.push_back(item);
-}
-
-/**
- * @brief Returns count of items in the list.
- * @return Count of filters in the list.
- */
-size_t LineFiltersList::GetCount() const
-{
-	return m_items.size();
-}
-
-/**
- * @brief Empties the list.
- */
-void LineFiltersList::Empty()
-{
-	m_items.clear();
 }
 
 /**

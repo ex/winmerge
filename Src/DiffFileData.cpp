@@ -6,7 +6,7 @@
  * @date  Created: 2003-08-22
  */
 
-#include "stdafx.h"
+#include "pch.h"
 #include "DiffFileData.h"
 #include <io.h>
 #include <memory>
@@ -16,23 +16,16 @@
 #include "TFile.h"
 #include "FileTransform.h"
 #include "unicoder.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
-
+#include "DebugNew.h"
 
 /**
  * @brief Simple initialization of DiffFileData
  * @note Diffcounts are initialized to invalid values, not zeros.
  */
 DiffFileData::DiffFileData()
-: m_inf(new file_data[2])
+: m_inf(new file_data[2]{})
+, m_used(false)
 {
-	int i = 0;
-	for (i = 0; i < 2; ++i)
-		memset(&m_inf[i], 0, sizeof(m_inf[i]));
-	m_used = false;
 	Reset();
 }
 
@@ -83,7 +76,7 @@ bool DiffFileData::DoOpenFiles()
 		if (m_inf[i].desc == 0)
 		{
 			_tsopen_s(&m_inf[i].desc, TFile(m_FileLocation[i].filepath).wpath().c_str(),
-					O_RDONLY | O_BINARY, _SH_DENYWR, _S_IREAD);
+					O_RDONLY | O_BINARY, _SH_DENYNO, _S_IREAD);
 		}
 		if (m_inf[i].desc < 0)
 			return false;
@@ -131,7 +124,7 @@ void DiffFileData::Reset()
 			_close(m_inf[i].desc);
 		}
 		m_inf[i].desc = 0;
-		memset(&m_inf[i], 0, sizeof(m_inf[i]));
+		m_inf[i] = {};
 	}
 }
 

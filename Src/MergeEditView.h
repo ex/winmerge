@@ -121,6 +121,7 @@ public:
 	bool IsLineInCurrentDiff(int nLine) const;
 	void SelectNone();
 	void SelectDiff(int nDiff, bool bScroll = true, bool bSelectText = true);
+	void DeselectDiffIfCursorNotInCurrentDiff();
 	virtual CCrystalTextBuffer *LocateTextBuffer ();
 	const CCrystalTextBuffer *LocateTextBuffer () const { return const_cast<CMergeEditView *>(this)->LocateTextBuffer(); };
 	void GetFullySelectedDiffs(int & firstDiff, int & lastDiff, int & firstWordDiff, int & lastWordDiff, const CPoint *pptStart = nullptr, const CPoint *ppEnd = nullptr);
@@ -136,7 +137,7 @@ public:
 	void SelectArea(const CPoint & ptStart, const CPoint & ptEnd) { SetSelection(ptStart, ptEnd); } // make public
 	using CGhostTextView::GetSelection;
 	virtual void UpdateSiblingScrollPos (bool bHorz) override;
-	virtual std::vector<TEXTBLOCK> GetAdditionalTextBlocks (int nLineIndex) override;
+	virtual std::vector<CrystalLineParser::TEXTBLOCK> GetAdditionalTextBlocks (int nLineIndex) override;
 	virtual COLORREF GetColor(int nColorIndex) override;
 	virtual void GetLineColors (int nLineIndex, COLORREF & crBkgnd,
 			COLORREF & crText, bool & bDrawWhitespace) override;
@@ -255,6 +256,7 @@ protected:
 	afx_msg void OnUpdatePrevdiffRO(CCmdUI* pCmdUI);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnAllLeft();
 	afx_msg void OnUpdateAllLeft(CCmdUI* pCmdUI);
 	afx_msg void OnAllRight();
@@ -304,6 +306,8 @@ protected:
 	afx_msg void OnUpdateR2LNext(CCmdUI* pCmdUI);
 	afx_msg void OnChangePane();
 	afx_msg void OnWMGoto();
+	afx_msg void OnShellMenu();
+	afx_msg void OnUpdateShellMenu(CCmdUI* pCmdUI);
 	afx_msg void OnScripts(UINT nID );
 	afx_msg void OnUpdateNoPrediffer(CCmdUI* pCmdUI);
 	afx_msg void OnUpdatePrediffer(CCmdUI* pCmdUI);
@@ -347,3 +351,23 @@ protected:
 inline CMergeDoc* CMergeEditView::GetDocument()
    { return reinterpret_cast<CMergeDoc*>(m_pDocument); }
 #endif
+
+/**
+ * @brief Enable/Disable automatic rescanning
+ */
+inline bool CMergeEditView::EnableRescan(bool bEnable)
+{
+	bool bOldValue = m_bAutomaticRescan;
+	m_bAutomaticRescan = bEnable;
+	return bOldValue;
+}
+
+/**
+ * @brief Check if cursor is inside difference.
+ * @return true if cursor is inside difference.
+ */
+inline bool CMergeEditView::IsCursorInDiff() const
+{
+	return m_bCurrentLineIsDiff;
+}
+

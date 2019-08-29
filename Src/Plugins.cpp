@@ -24,6 +24,7 @@
  *  @brief Support for VBS Scriptlets, VB ActiveX DLL, VC++ COM DLL
  */ 
 
+#include "pch.h"
 #include "Plugins.h"
 #define POCO_NO_UNWINDOWS 1
 #include <vector>
@@ -543,7 +544,7 @@ int PluginInfo::LoadPlugin(const String & scriptletFilepath, const wchar_t *tran
 static void ReportPluginLoadFailure(const String & scriptletFilepath, const wchar_t *transformationEvent)
 {
 	String sEvent = ucr::toTString(transformationEvent);
-	AppErrorMessageBox(strutils::format(_T("Exception loading plugin for event: %s\r\n%s"), sEvent.c_str(), scriptletFilepath.c_str()));
+	AppErrorMessageBox(strutils::format(_T("Exception loading plugin for event: %s\r\n%s"), sEvent, scriptletFilepath));
 }
 
 /**
@@ -948,7 +949,7 @@ static void ShowPluginErrorMessage(IDispatch *piScript, LPTSTR description)
 	PluginInfo * pInfo = CAllThreadsScripts::GetActiveSet()->GetPluginInfo(piScript);
 	assert(pInfo != nullptr);
 	assert(description != nullptr);	
-	AppErrorMessageBox(strutils::format(_T("%s: %s"), pInfo->m_name.c_str(), description));
+	AppErrorMessageBox(strutils::format(_T("%s: %s"), pInfo->m_name, description));
 }
 
 /**

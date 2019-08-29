@@ -1,18 +1,16 @@
 /**
- *  @file version.cpp
+ *  @file VersionInfo.cpp
  *
  *  @brief Implementation of CVersionInfo class
  */ 
 
+#include "pch.h"
 #include "VersionInfo.h"
 #include <windows.h>
 #include <cstdio>
-#include <tchar.h>
 #include <cassert>
 #include <strsafe.h>
-#include "coretypes.h"
 #include "UnicodeString.h"
-#include "TFile.h"
 
 /** 
  * @brief Structure used to store language and codepage.
@@ -108,96 +106,6 @@ CVersionInfo::CVersionInfo(HINSTANCE hModule)
 }
 
 /** 
- * @brief Return file version string.
- * @return File version as string.
- */
-String CVersionInfo::GetFileVersion() const
-{
-	return m_strFileVersion;
-}
-
-/** 
- * @brief Return private build value.
- * @return Private build number as string.
- */
-String CVersionInfo::GetPrivateBuild() const
-{
-	return m_strPrivateBuild;
-}
-
-/** 
- * @brief Return special build value.
- * @return Special build number as string.
- */
-String CVersionInfo::GetSpecialBuild() const
-{
-	return m_strSpecialBuild;
-}
-
-/** 
- * @brief Return company name.
- * @return Company name.
- */
-String CVersionInfo::GetCompanyName() const
-{
-	return m_strCompanyName;
-}
-
-/** 
- * @brief Return file description string.
- * @return File description string.
- */
-String CVersionInfo::GetFileDescription() const
-{
-	return m_strFileDescription;
-}
-
-/** 
- * @brief Return internal name.
- * @return Internal name.
- */
-String CVersionInfo::GetInternalName() const
-{
-	return m_strInternalName;
-}
-
-/** 
- * @brief Return full file name.
- * @return full file name.
- */
-String CVersionInfo::GetFullFileName() const
-{
-	return m_strFileName;
-}
-
-/** 
- * @brief Return copyright info.
- * @return Copyright info.
- */
-String CVersionInfo::GetLegalCopyright() const
-{
-	return m_strLegalCopyright;
-}
-
-/** 
- * @brief Return original filename.
- * @return Original filename.
- */
-String CVersionInfo::GetOriginalFilename() const
-{
-	return m_strOriginalFilename;
-}
-
-/** 
- * @brief Return product's version number.
- * @return Product's version number as string.
- */
-String CVersionInfo::GetProductVersion() const
-{
-	return m_strProductVersion;
-}
-
-/** 
  * @brief Format version string from numbers.
  * Version number consists of four WORD (16-bit) numbers. This function
  * formats those numbers to string, where numbers are separated by
@@ -211,12 +119,12 @@ static String MakeVersionString(DWORD hi, DWORD lo)
 	TCHAR ver[50];
 	if (LOWORD(lo) == 0)
 	{
-		StringCchPrintf(ver, countof(ver) - 1, _T("%d.%d.%d"), HIWORD(hi),
+		StringCchPrintf(ver, std::size(ver) - 1, _T("%d.%d.%d"), HIWORD(hi),
 				LOWORD(hi), HIWORD(lo));
 	}
 	else
 	{
-		StringCchPrintf(ver, countof(ver) - 1, _T("%d.%d.%d.%d"), HIWORD(hi),
+		StringCchPrintf(ver, std::size(ver) - 1, _T("%d.%d.%d.%d"), HIWORD(hi),
 				LOWORD(hi), HIWORD(lo), LOWORD(lo));
 	}
 	String sver(ver);
@@ -265,15 +173,6 @@ bool CVersionInfo::GetFixedFileVersion(unsigned& versionMS, unsigned& versionLS)
 		return true;
 	}
 	return false;
-}
-
-/** 
- * @brief Return comment string.
- * @return Comment string.
- */
-String CVersionInfo::GetComments() const
-{
-	return m_strComments;
 }
 
 /** 
@@ -339,9 +238,9 @@ void CVersionInfo::QueryStrings()
 		WORD codepage;
 		GetCodepageForLanguage(m_wLanguage, codepage);
 		TCHAR temp[20];
-		StringCchPrintf(temp, countof(temp) - 1, _T("%04x"), m_wLanguage);
+		StringCchPrintf(temp, std::size(temp) - 1, _T("%04x"), m_wLanguage);
 		m_strLanguage = temp;
-		StringCchPrintf(temp, countof(temp) - 1, _T("%04x"), codepage);
+		StringCchPrintf(temp, std::size(temp) - 1, _T("%04x"), codepage);
 		m_strCodepage = temp;
 	}
 	else if (m_strLanguage.empty()
@@ -354,10 +253,10 @@ void CVersionInfo::QueryStrings()
 				(LPVOID *)&lpTranslate, (UINT *)&langLen))
 		{
 			TCHAR temp[20];
-			StringCchPrintf(temp, countof(temp) - 1, _T("%4.4X"),
+			StringCchPrintf(temp, std::size(temp) - 1, _T("%4.4X"),
 					lpTranslate[0].wLanguage);
 			m_strLanguage = temp;
-			StringCchPrintf(temp, countof(temp) - 1, _T("%4.4X"),
+			StringCchPrintf(temp, std::size(temp) - 1, _T("%4.4X"),
 					lpTranslate[0].wCodePage);
 			m_strCodepage = temp;
 		}
@@ -388,7 +287,7 @@ void CVersionInfo::QueryValue(LPCTSTR szId, String& s)
 	bool    bRetCode;
 
 	TCHAR szSelector[256];
-	StringCchPrintf(szSelector, countof(szSelector) - 1,
+	StringCchPrintf(szSelector, std::size(szSelector) - 1,
 			_T("\\StringFileInfo\\%s%s\\%s"),
 			m_strLanguage.c_str(), m_strCodepage.c_str(), szId);
 	bRetCode = !!VerQueryValue((LPVOID)m_pVffInfo.get(),

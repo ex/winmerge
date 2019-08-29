@@ -41,18 +41,18 @@
 ////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////
-//	??-Aug-99
-//		Sven Wiegand (search for "//BEGIN SW" to find my changes):
-//	+ FEATURE: Remembering the text-position of the latest change.
+//  ??-Aug-99
+//      Sven Wiegand (search for "//BEGIN SW" to find my changes):
+//  + FEATURE: Remembering the text-position of the latest change.
 ////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////
-//	24-Oct-99
-//		Sven Wiegand
-//	+ FIX: Setting m_ptLastChange to the beginning of the selection in
-//		     InternalDeleteText(), so that position is valid in any case.
-//		     Editor won't crash any more i.e. by selecting whole buffer and
-//		     deleting it and then executing ID_EDIT_GOTO_LAST_CHANGE-command.
+//  24-Oct-99
+//      Sven Wiegand
+//  + FIX: Setting m_ptLastChange to the beginning of the selection in
+//           InternalDeleteText(), so that position is valid in any case.
+//           Editor won't crash any more i.e. by selecting whole buffer and
+//           deleting it and then executing ID_EDIT_GOTO_LAST_CHANGE-command.
 ////////////////////////////////////////////////////////////////////////////
 /** 
  * @file ccrystaltextbuffer.cpp
@@ -120,17 +120,13 @@ RecalcPoint (CPoint & ptPoint)
   if (ptPoint.y > m_ptEnd.y)
     {
       ptPoint.y -= (m_ptEnd.y - m_ptStart.y);
-	  ptPoint.y = min(ptPoint.y, m_ptEnd.y);
-	  if (ptPoint.y < m_ptEnd.y)
-		return;
+      return;
     }
   if (ptPoint.y == m_ptEnd.y && ptPoint.x >= m_ptEnd.x)
     {
       ptPoint.y = m_ptStart.y;
       ptPoint.x = m_ptStart.x + (ptPoint.x - m_ptEnd.x);
-	  ptPoint.x = min(ptPoint.x, m_ptEnd.x);
-	  if( ptPoint.x < m_ptEnd.x)
-		return;
+      return;
     }
   if (ptPoint.y == m_ptStart.y)
     {
@@ -261,15 +257,17 @@ AppendLine (int nLineIndex, LPCTSTR pszChars, size_t nLength )
  */
 void CCrystalTextBuffer::MoveLine(int line1, int line2, int newline1)
 {
-	int ldiff = newline1 - line1;
-	if (ldiff > 0) {
-		for (int l = line2; l >= line1; l--)
-			m_aLines[l+ldiff] = m_aLines[l];
-	}
-	else if (ldiff < 0) {
-		for (int l = line1; l <= line2; l++)
-			m_aLines[l+ldiff] = m_aLines[l];
-	}
+  int ldiff = newline1 - line1;
+  if (ldiff > 0)
+    {
+      for (int l = line2; l >= line1; l--)
+        m_aLines[l+ldiff] = m_aLines[l];
+    }
+  else if (ldiff < 0)
+    {
+      for (int l = line1; l <= line2; l++)
+        m_aLines[l+ldiff] = m_aLines[l];
+    }
 }
 
 void CCrystalTextBuffer::SetEmptyLine (int nPosition, int nCount /*= 1*/ )
@@ -447,10 +445,10 @@ LoadFromFile (LPCTSTR pszFileName, CRLFSTYLE nCrlfStyle /*= CRLF_STYLE_AUTOMATIC
             {
               //  Reallocate line buffer
               nCurrentMax += 256;
-			  TCHAR *pcNewLineBuf = new TCHAR[nCurrentMax];
-			  memcpy(pcNewLineBuf, pcLineBuf, sizeof(TCHAR) * (nCurrentMax - 256));
-			  delete [] pcLineBuf;
-			  pcLineBuf = pcNewLineBuf;
+              TCHAR *pcNewLineBuf = new TCHAR[nCurrentMax];
+              memcpy(pcNewLineBuf, pcLineBuf, sizeof(TCHAR) * (nCurrentMax - 256));
+              delete [] pcLineBuf;
+              pcLineBuf = pcNewLineBuf;
             }
 
           // detect both types of EOL for each line
@@ -467,7 +465,7 @@ LoadFromFile (LPCTSTR pszFileName, CRLFSTYLE nCrlfStyle /*= CRLF_STYLE_AUTOMATIC
         }
 
       pcLineBuf[nCurrentLength] = 0;
-	  InsertLine (&pcLineBuf[0], nCurrentLength);
+      InsertLine (&pcLineBuf[0], nCurrentLength);
 
       ASSERT (m_aLines.size() > 0);   //  At least one empty line must present
 
@@ -514,14 +512,14 @@ bool CCrystalTextBuffer::SaveToFile(LPCTSTR pszFileName,
   {
     TCHAR drive[_MAX_PATH], dir[_MAX_PATH], name[_MAX_PATH], ext[_MAX_PATH];
 #ifdef _UNICODE
-    _wsplitpath (pszFileName, drive, dir, name, ext);
+    _wsplitpath_s (pszFileName, drive, dir, name, ext);
 #else
-    _splitpath (pszFileName, drive, dir, name, ext);
+    _splitpath_s (pszFileName, drive, dir, name, ext);
 #endif
-    _tcscpy (szTempFileDir, drive);
-    _tcscat (szTempFileDir, dir);
-    _tcscpy (szBackupFileName, pszFileName);
-    _tcscat (szBackupFileName, _T (".bak"));
+    _tcscpy_s (szTempFileDir, drive);
+    _tcscat_s (szTempFileDir, dir);
+    _tcscpy_s (szBackupFileName, pszFileName);
+    _tcscat_s (szBackupFileName, _T (".bak"));
 
     if (::GetTempFileName (szTempFileDir, _T ("CRE"), 0, szTempFileName) == 0)
       __leave;
@@ -609,7 +607,7 @@ bool CCrystalTextBuffer::SaveToFile(LPCTSTR pszFileName,
     m_dwRevisionNumberOnSave = m_dwCurrentRevisionNumber;
     
     // redraw line revision marks
-    UpdateViews (nullptr, nullptr, UPDATE_FLAGSONLY);	
+    UpdateViews (nullptr, nullptr, UPDATE_FLAGSONLY);
   }
   __finally
   {
@@ -645,20 +643,20 @@ SetCRLFMode (CRLFSTYLE nCRLFMode)
 bool CCrystalTextBuffer::
 applyEOLMode()
 {
-	LPCTSTR lpEOLtoApply = GetDefaultEol();
-	bool bChanged = false;
-	for (size_t i = 0 ; i < m_aLines.size(); i++)
-	{
-		// the last real line has no EOL
-		if (!m_aLines[i].HasEol())
-			continue;
-		bChanged |= ChangeLineEol(static_cast<int>(i), lpEOLtoApply);
-	}
+  LPCTSTR lpEOLtoApply = GetDefaultEol();
+  bool bChanged = false;
+  for (size_t i = 0 ; i < m_aLines.size(); i++)
+    {
+      // the last real line has no EOL
+      if (!m_aLines[i].HasEol())
+        continue;
+      bChanged |= ChangeLineEol(static_cast<int>(i), lpEOLtoApply);
+    }
 
-	if (bChanged)
-		SetModified(true);
+  if (bChanged)
+    SetModified(true);
 
-	return bChanged;
+  return bChanged;
 }
 
 int CCrystalTextBuffer::
@@ -688,10 +686,10 @@ GetFullLineLength (int nLine) const
 {
   ASSERT (m_bInit);             //  Text buffer not yet initialized.
   if (nLine >= static_cast<int>(m_aLines.size()))
-  {
-	  ASSERT(false);
-	  return 0;
-  }
+    {
+      ASSERT(false);
+      return 0;
+    }
   ASSERT (m_aLines[nLine].FullLength() < INT_MAX);
   //  You must call InitNew() or LoadFromFile() first!
 
@@ -908,7 +906,7 @@ GetText (int nStartLine, int nStartChar, int nEndLine, int nEndChar,
           pszBuf += nCount;
         }
       pszCurCRLF = pszCRLF ? pszCRLF : startLine.GetEol();
-	  nCRLFLength = lstrlen(pszCurCRLF);
+      nCRLFLength = lstrlen(pszCurCRLF);
       memcpy (pszBuf, pszCurCRLF, sizeof (TCHAR) * nCRLFLength);
       pszBuf += nCRLFLength;
       for (int I = nStartLine + 1; I < nEndLine; I++)
@@ -923,7 +921,7 @@ GetText (int nStartLine, int nStartChar, int nEndLine, int nEndChar,
               pszBuf += nCount;
             }
           pszCurCRLF = pszCRLF ? pszCRLF : li.GetEol();
-	      nCRLFLength = lstrlen(pszCurCRLF);
+          nCRLFLength = lstrlen(pszCurCRLF);
           memcpy (pszBuf, pszCurCRLF, sizeof (TCHAR) * nCRLFLength);
           pszBuf += nCRLFLength;
         }
@@ -1136,11 +1134,10 @@ InternalInsertText (CCrystalTextView * pSource, int nLine, int nPos,
 
   int nInsertedLines = 0;
   int nCurrentLine = nLine;
-  size_t nTextPos;
   for (;;)
     {
       int haseol = 0;
-      nTextPos = 0;
+      size_t nTextPos = 0;
       // advance to end of line
       while (nTextPos < cchText && !LineInfo::IsEol(pszText[nTextPos]))
         nTextPos++;
@@ -1365,13 +1362,13 @@ GetRedoDescription (CString & desc, POSITION pos /*= nullptr*/ ) const
 bool CCrystalTextBuffer::		/* virtual base */		
 UndoInsert(CCrystalTextView * pSource, CPoint & ptCursorPos, const CPoint apparent_ptStartPos, CPoint const apparent_ptEndPos, const UndoRecord & ur)
 {
-    if (DeleteText (pSource, apparent_ptStartPos.y, apparent_ptStartPos.x, apparent_ptEndPos.y, apparent_ptEndPos.x, 0, false, false))
-	{
-		ptCursorPos = apparent_ptStartPos;
-		return true;
-	}
-	ASSERT(false);
-	return false;
+  if (DeleteText (pSource, apparent_ptStartPos.y, apparent_ptStartPos.x, apparent_ptEndPos.y, apparent_ptEndPos.x, 0, false, false))
+    {
+      ptCursorPos = apparent_ptStartPos;
+      return true;
+    }
+  ASSERT(false);
+  return false;
 }
 
 bool CCrystalTextBuffer::		/* virtual base */
@@ -1392,26 +1389,25 @@ Undo (CCrystalTextView * pSource, CPoint & ptCursorPos)
       CPoint apparent_ptEndPos = ur.m_ptEndPos;
 
       if (ur.m_dwFlags & UNDO_INSERT)
-      {
-		  if (!UndoInsert(pSource, ptCursorPos, apparent_ptStartPos, apparent_ptEndPos, ur))
-		  {
-			  failed = true;
-			  break;
-		  }
-		  // ptCursorPos = apparent_ptStartPos;
-      }
+        {
+          if (!UndoInsert(pSource, ptCursorPos, apparent_ptStartPos, apparent_ptEndPos, ur))
+            {
+              failed = true;
+              break;
+            }
+          // ptCursorPos = apparent_ptStartPos;
+        }
       else
-      {
+        {
           int nEndLine, nEndChar;
-		  if (!InsertText(pSource, apparent_ptStartPos.y, apparent_ptStartPos.x, ur.GetText(), ur.GetTextLength(), nEndLine, nEndChar, 0, false))
-		  {
-			  ASSERT(false);
-			  failed = true;
-			  break;
-		  }
+          if (!InsertText(pSource, apparent_ptStartPos.y, apparent_ptStartPos.x, ur.GetText(), ur.GetTextLength(), nEndLine, nEndChar, 0, false))
+            {
+              ASSERT(false);
+              failed = true;
+              break;
+            }
           ptCursorPos = m_ptLastChange;
-
-      }
+        }
 
       // restore line revision numbers
       RestoreRevisionNumbers(ur.m_ptStartPos.y, ur.m_paSavedRevisionNumbers);
@@ -1705,7 +1701,7 @@ void CCrystalTextBuffer::
 RestoreRevisionNumbers(int nStartLine, CDWordArray *paSavedRevisionNumbers)
 {
   for (int i = 0; i < paSavedRevisionNumbers->GetSize(); i++)
-	m_aLines[nStartLine + i].m_dwRevisionNumber = (*paSavedRevisionNumbers)[i];
+    m_aLines[nStartLine + i].m_dwRevisionNumber = (*paSavedRevisionNumbers)[i];
 }
 
 bool CCrystalTextBuffer::			/* virtual base */
@@ -1902,43 +1898,6 @@ FindPrevBookmarkLine (int nCurrentLine) const
       nCurrentLine = (int) (nSize - 1);
     }
 //~  return -1;
-}
-
-bool CCrystalTextBuffer::
-IsMBSLead (int nLine, int nCol) const
-{
-  ASSERT (m_bInit);             //  Text buffer not yet initialized.
-  //  You must call InitNew() or LoadFromFile() first!
-
-#ifdef _UNICODE
-  return false;
-#else // _UNICODE
-  const unsigned char *string = (const unsigned char *) GetLineChars (nLine);
-  const unsigned char *current = string + nCol;
-  if (_ismbslead (string, current) < 0)
-    return true;
-  return false;
-#endif // _UNICODE
-}
-
-bool CCrystalTextBuffer::
-IsMBSTrail (int nLine, int nCol) const
-{
-  ASSERT (m_bInit);             //  Text buffer not yet initialized.
-  //  You must call InitNew() or LoadFromFile() first!
-
-#ifdef _UNICODE
-  const wchar_t *current = GetLineChars (nLine) + nCol;
-  if (*current >= 0xDC00 && *current <= 0xDFFF) // surrogate pair 
-    return true;
-  return false;
-#else // _UNICODE
-  const unsigned char *string = (const unsigned char *) GetLineChars (nLine);
-  const unsigned char *current = string + nCol;
-  if (_ismbstrail (string, current) < 0)
-    return true;
-  return false;
-#endif // _UNICODE
 }
 
 //BEGIN SW

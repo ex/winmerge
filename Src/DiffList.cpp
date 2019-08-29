@@ -20,6 +20,7 @@
  * @brief Implementation file for DiffList class
  */
 
+#include "pch.h"
 #include "DiffList.h"
 #include <cassert>
 #include <string>
@@ -96,17 +97,6 @@ void DiffList::Clear()
 	m_lastSignificantMiddleOnly = -1;
 	m_lastSignificantRightOnly = -1;
 	m_lastSignificantConflict = -1;
-}
-
-/**
- * @brief Returns count of items in diff list.
- * This function returns total amount of items (diffs) in list. So returned
- * count includes significant and non-significant diffs.
- * @note Use GetSignificantDiffs() to get count of non-ignored diffs.
- */
-int DiffList::GetSize() const
-{
-	return (int) m_diffs.size();
 }
 
 /**
@@ -379,17 +369,6 @@ bool DiffList::GetNextDiff(int nLine, int & nDiff) const
 }
 
 /**
- * @brief Check if diff-list contains significant diffs.
- * @return true if list has significant diffs, false otherwise.
- */
-bool DiffList::HasSignificantDiffs() const
-{
-	if (m_firstSignificant == -1)
-		return false;
-	return true;
-}
-
-/**
  * @brief Return previous diff index from given line.
  * @param [in] nLine First line searched.
  * @return Index for next difference or -1 if no difference is found.
@@ -514,43 +493,6 @@ void DiffList::ConstructSignificantChain()
 	}
 }
 
-/**
- * @brief Return index to first significant difference.
- * @return Index of first significant difference.
- */
-int DiffList::FirstSignificantDiff() const
-{
-	return m_firstSignificant;
-}
-
-/**
- * @brief Return index of next significant diff.
- * @param [in] nDiff Index to start looking for next diff.
- * @return Index of next significant difference.
- */
-int DiffList::NextSignificantDiff(int nDiff) const
-{
-	return (int)m_diffs[nDiff].next;
-}
-
-/**
- * @brief Return index of previous significant diff.
- * @param [in] nDiff Index to start looking for previous diff.
- * @return Index of previous significant difference.
- */
-int DiffList::PrevSignificantDiff(int nDiff) const
-{
-	return (int)m_diffs[nDiff].prev;
-}
-
-/**
- * @brief Return index to last significant diff.
- * @return Index of last significant difference.
- */
-int DiffList::LastSignificantDiff() const
-{
-	return m_lastSignificant;
-}
 
 /**
  * @brief Return pointer to first significant diff.

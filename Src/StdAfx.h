@@ -37,16 +37,30 @@
 #include <afxpriv.h>        // MFC private declarations (crystal text needs but doesn't include this)
 #include <afxole.h>         // MFC OLE (COM) support
 
+#include <atlimage.h>
+
 // For CSizingControlBar
 #include "sizecbar.h"
 #include "scbarg.h"
 
-#include "coretypes.h"
+#include <string>
+#include <vector>
+#include <map>
+#include <unordered_set>
+#include <stack>
+#include <list>
+#include <array>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <memory>
+#include <functional>
+#include <cassert>
+#include <ctime>
+#include <tchar.h>
 
-#define IF_IS_TRUE_ALL(expression, index, count) \
-	for (index = 0; index < count; index++) { if ((expression)) ; else break; } \
-	if (index == count)
-
+#include "boost/flyweight.hpp"
+#include "boost/range/mfc.hpp"
 
 /**
  * @name User-defined Windows-messages
@@ -56,6 +70,8 @@
 const UINT MSG_UI_UPDATE = WM_USER + 1;
 /// Request to save panesizes
 const UINT MSG_STORE_PANESIZES = WM_USER + 2;
+/// Request to generate file compare report
+const UINT MSG_GENERATE_FLIE_COMPARE_REPORT = WM_USER + 3;
 /* @} */
 
 /// Seconds ignored in filetime differences if option enabled

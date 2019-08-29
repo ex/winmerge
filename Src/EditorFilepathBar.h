@@ -61,15 +61,15 @@ public :
 // Dialog Data
 	enum { IDD = IDD_EDITOR_HEADERBAR };
 	
-	void Resize();
+	void Resize() override;
 	void Resize(int widths[]);
-	void SetOnSetFocusCallback(const std::function<void(int)> callbackfunc);
+	void SetOnSetFocusCallback(const std::function<void(int)> callbackfunc) override;
 
 	// Implement IFilepathHeaders
-	void SetText(int pane, const String& sString);
-	String GetText(int pane) const;
-	void SetActive(int pane, bool bActive);
-	void SetPaneCount(int nPanes);
+	void SetText(int pane, const String& sString) override;
+	String GetText(int pane) const override;
+	void SetActive(int pane, bool bActive) override;
+	void SetPaneCount(int nPanes) override;
 
 protected:
 	//{{AFX_MSG(CEditorFilePathBar)
@@ -85,3 +85,17 @@ private:
 	int m_nPanes;
 	std::function<void(int)> m_callbackfunc;
 };
+
+inline void CEditorFilePathBar::SetPaneCount(int nPanes)
+{
+	m_nPanes = nPanes;
+}
+
+/** 
+ * @brief Set callback function on EN_SETFOCUS notification
+ */
+inline void CEditorFilePathBar::SetOnSetFocusCallback(const std::function<void(int)> callbackfunc)
+{
+	m_callbackfunc = callbackfunc;
+}
+

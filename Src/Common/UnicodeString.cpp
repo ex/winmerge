@@ -24,6 +24,7 @@
 // String formatting code originally from Paul Senzee:
 // http://www.senzee5.com/2006/05/c-formatting-stdstring.html
 
+#include "pch.h"
 #include "UnicodeString.h"
 #include <cstdarg>
 #include <cstdio>
@@ -186,7 +187,7 @@ String format_arg_list(const TCHAR *fmt, va_list args)
  * @brief printf()-style formatting for STL string.
  * Use this function to format String:s in printf() style.
  */
-String format(const TCHAR *fmt, ...)
+String format_varg(const TCHAR *fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);

@@ -15,7 +15,7 @@ class CLoadSaveCodepageDlg : public CTrDialog
 {
 public:
 // Construction
-	CLoadSaveCodepageDlg(int nFiles, CWnd* pParent = nullptr);   // standard constructor
+	explicit CLoadSaveCodepageDlg(int nFiles, CWnd* pParent = nullptr);   // standard constructor
 	void SetLeftRightAffectStrings(const String & sAffectsLeft, const String & sAffectsMiddle, const String & sAffectsRight);
 	void EnableSaveCodepage(bool enable) { m_bEnableSaveCodepage = enable; }
 	void SetCodepages(int codepage) { m_nLoadCodepage = m_nSaveCodepage = codepage; }
@@ -66,7 +66,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CLoadSaveCodepageDlg)
-	virtual BOOL OnInitDialog();
+	virtual BOOL OnInitDialog() override;
 	afx_msg void OnAffectsLeftBtnClicked();
 	afx_msg void OnAffectsMiddleBtnClicked();
 	afx_msg void OnAffectsRightBtnClicked();

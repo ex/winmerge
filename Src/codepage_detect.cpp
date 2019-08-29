@@ -5,11 +5,11 @@
  *
  */
 
+#include "pch.h"
 #include "codepage_detect.h"
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
-#include <windows.h>
 #include <memory>
 #include "unicoder.h"
 #include "ExConverter.h"
@@ -227,7 +227,7 @@ static unsigned GuessEncoding_from_bytes(const String& ext, const char *src, siz
 FileTextEncoding GuessCodepageEncoding(const String& filepath, int guessEncodingType, ptrdiff_t mapmaxlen)
 {
 	FileTextEncoding encoding;
-	CMarkdown::FileImage fi(filepath.c_str(), mapmaxlen);
+	CMarkdown::FileImage fi(filepath != _T("NUL") ? filepath.c_str() : nullptr, mapmaxlen);
 	encoding.SetCodepage(ucr::getDefaultCodepage());
 	encoding.m_bom = false;
 	switch (fi.nByteOrder)

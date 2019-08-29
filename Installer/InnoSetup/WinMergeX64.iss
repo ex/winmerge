@@ -43,28 +43,25 @@
 ;      2.  Read Me
 ;      3.  Users's Guide
 ;      4.  WinMerge on the Web
-;      5.  Uninstall WinMerge
 ; #  Create the ability to install to two start menu groups simultaneously
 ;
 ; Not yet possible (Limited by Inno Setup):
 ; #  While uninstalling prompt the user as to whether or not they'd like to remove their WinMerge preferences too?
 
-#define AppVersion GetFileVersion(SourcePath + "\..\..\Build\X64\MergeUnicodeRelease\WinMergeU.exe")
-#define FriendlyAppVersion Copy(GetFileVersion(SourcePath + "\..\..\Build\X64\MergeUnicodeRelease\WinMergeU.exe"), 1, 5)
-#define VS120COMNTOOLS GetEnv('VS120COMNTOOLS')
-#define VS140COMNTOOLS GetEnv('VS140COMNTOOLS')
+#define AppVersion GetFileVersion(SourcePath + "\..\..\Build\X64\Release\WinMergeU.exe")
+#define ShellExtensionVersion GetFileVersion(SourcePath + "..\..\Build\ShellExtension\ShellExtensionX64.dll")
 
 [Setup]
 AppName=WinMerge
 AppVersion={#AppVersion}
 AppVerName=WinMerge {#AppVersion} x64
 AppPublisher=Thingamahoochie Software
-AppPublisherURL=http://WinMerge.org/
-AppSupportURL=http://WinMerge.org/
-AppUpdatesURL=http://WinMerge.org/
+AppPublisherURL=https://WinMerge.org/
+AppSupportURL=https://WinMerge.org/
+AppUpdatesURL=https://WinMerge.org/
 
 ; Installer executable's version resource info
-VersionInfoCompany=http://winmerge.org
+VersionInfoCompany=https://winmerge.org
 VersionInfoDescription=WinMerge Installer
 VersionInfoVersion={#AppVersion}
 
@@ -89,7 +86,7 @@ PrivilegesRequired=admin
 ;Windows 2000 or later required
 MinVersion=0,5.0
 
-UninstallDisplayIcon={app}\{code:ExeName}
+UninstallDisplayIcon={app}\WinMergeU.exe
 
 ;Artwork References
 WizardImageFile=Art\Large Logo.bmp
@@ -121,43 +118,43 @@ ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 ;Inno Setup's Native Language
-Name: English; MessagesFile: ..\..\Translations\InnoSetup\English.isl
+Name: English; MessagesFile: compiler:Default.isl,..\..\Translations\InnoSetup\English.isl
 
 ;Localizations:
-Name: Basque; MessagesFile: ..\..\Translations\InnoSetup\Basque.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Basque.txt
-Name: Bulgarian; MessagesFile: ..\..\Translations\InnoSetup\Bulgarian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Bulgarian.txt
-Name: Catalan; MessagesFile: ..\..\Translations\InnoSetup\Catalan.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Catalan.txt
-Name: Chinese_Simplified; MessagesFile: ..\..\Translations\InnoSetup\Chinese_Simplified.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-ChineseSimplified.txt
-Name: Chinese_Traditional; MessagesFile: ..\..\Translations\InnoSetup\Chinese_Traditional.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-ChineseTraditional.txt
-Name: Croatian; MessagesFile: ..\..\Translations\InnoSetup\Croatian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Croatian.txt
-Name: Czech; MessagesFile: ..\..\Translations\InnoSetup\Czech.isl
-Name: Danish; MessagesFile: ..\..\Translations\InnoSetup\Danish.isl
-Name: Dutch; MessagesFile: ..\..\Translations\InnoSetup\Dutch.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Dutch.txt
-Name: Finnish; MessagesFile: ..\..\Translations\InnoSetup\Finnish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Finnish.txt
-Name: French; MessagesFile: ..\..\Translations\InnoSetup\French.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-French.txt
-Name: Galician; MessagesFile: ..\..\Translations\InnoSetup\Galician.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Galician.txt
-Name: German; MessagesFile: ..\..\Translations\InnoSetup\German.isl
-Name: Greek; MessagesFile: ..\..\Translations\InnoSetup\Greek.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Greek.txt
-Name: Hungarian; MessagesFile: ..\..\Translations\InnoSetup\Hungarian.isl
-Name: Italian; MessagesFile: ..\..\Translations\InnoSetup\Italian.isl
-Name: Japanese; MessagesFile: ..\..\Translations\InnoSetup\Japanese.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Japanese.txt
-Name: Korean; MessagesFile: ..\..\Translations\InnoSetup\Korean.isl
-Name: Lithuanian; MessagesFile: ..\..\Translations\InnoSetup\Lithuanian.isl
-Name: Norwegian; MessagesFile: ..\..\Translations\InnoSetup\Norwegian.isl
-Name: Persian; MessagesFile: ..\..\Translations\InnoSetup\Persian.isl
-Name: Polish; MessagesFile: ..\..\Translations\InnoSetup\Polish.isl
-Name: Portuguese; MessagesFile: ..\..\Translations\InnoSetup\Portuguese.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Portuguese.txt
-Name: PortugueseBrazilian; MessagesFile: ..\..\Translations\InnoSetup\Brazilian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Brazilian.txt
-Name: Romanian; MessagesFile: ..\..\Translations\InnoSetup\Romanian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Romanian.txt
-Name: Russian; MessagesFile: ..\..\Translations\InnoSetup\Russian.isl
-Name: Serbian; MessagesFile: ..\..\Translations\InnoSetup\Serbian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Serbian.txt
-Name: Sinhala; MessagesFile: ..\..\Translations\InnoSetup\Sinhala.isl
-Name: Slovak; MessagesFile: ..\..\Translations\InnoSetup\Slovak.isl
-Name: Slovenian; MessagesFile: ..\..\Translations\InnoSetup\Slovenian.isl
-Name: Spanish; MessagesFile: ..\..\Translations\InnoSetup\Spanish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Spanish.txt
-Name: Swedish; MessagesFile: ..\..\Translations\InnoSetup\Swedish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Swedish.txt
-Name: Turkish; MessagesFile: ..\..\Translations\InnoSetup\Turkish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Turkish.txt
-Name: Ukrainian; MessagesFile: ..\..\Translations\InnoSetup\Ukrainian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Ukrainian.txt
+Name: Basque; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Basque.isl,..\..\Translations\InnoSetup\Basque.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Basque.txt
+Name: Bulgarian; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Bulgarian.isl,..\..\Translations\InnoSetup\Bulgarian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Bulgarian.txt
+Name: Catalan; MessagesFile: compiler:Languages\Catalan.isl,..\..\Translations\InnoSetup\Catalan.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Catalan.txt
+Name: Chinese_Simplified; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\ChineseSimplified.isl,..\..\Translations\InnoSetup\Chinese_Simplified.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-ChineseSimplified.txt
+Name: Chinese_Traditional; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\ChineseTraditional.isl,..\..\Translations\InnoSetup\Chinese_Traditional.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-ChineseTraditional.txt
+Name: Croatian; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Croatian.isl,..\..\Translations\InnoSetup\Croatian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Croatian.txt
+Name: Czech; MessagesFile: compiler:Languages\Czech.isl,..\..\Translations\InnoSetup\Czech.isl
+Name: Danish; MessagesFile: compiler:Languages\Danish.isl,..\..\Translations\InnoSetup\Danish.isl
+Name: Dutch; MessagesFile: compiler:Languages\Dutch.isl,..\..\Translations\InnoSetup\Dutch.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Dutch.txt
+Name: Finnish; MessagesFile: compiler:Languages\Finnish.isl,..\..\Translations\InnoSetup\Finnish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Finnish.txt
+Name: French; MessagesFile: compiler:Languages\French.isl,..\..\Translations\InnoSetup\French.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-French.txt
+Name: Galician; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Galician.isl,..\..\Translations\InnoSetup\Galician.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Galician.txt
+Name: German; MessagesFile: compiler:Languages\German.isl,..\..\Translations\InnoSetup\German.isl
+Name: Greek; MessagesFile: compiler:Languages\Greek.isl,..\..\Translations\InnoSetup\Greek.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Greek.txt
+Name: Hungarian; MessagesFile: compiler:Languages\Hungarian.isl,..\..\Translations\InnoSetup\Hungarian.isl
+Name: Italian; MessagesFile: compiler:Languages\Italian.isl,..\..\Translations\InnoSetup\Italian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Italian.txt
+Name: Japanese; MessagesFile: compiler:Languages\Japanese.isl,..\..\Translations\InnoSetup\Japanese.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Japanese.txt
+Name: Korean; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Korean.isl,..\..\Translations\InnoSetup\Korean.isl
+Name: Lithuanian; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Lithuanian.isl,..\..\Translations\InnoSetup\Lithuanian.isl
+Name: Norwegian; MessagesFile: compiler:Languages\Norwegian.isl,..\..\Translations\InnoSetup\Norwegian.isl
+Name: Persian; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Farsi.isl,..\..\Translations\InnoSetup\Persian.isl
+Name: Polish; MessagesFile: compiler:Languages\Polish.isl,..\..\Translations\InnoSetup\Polish.isl
+Name: Portuguese; MessagesFile: compiler:Languages\Portuguese.isl,..\..\Translations\InnoSetup\Portuguese.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Portuguese.txt
+Name: PortugueseBrazilian; MessagesFile: compiler:Languages\BrazilianPortuguese.isl,..\..\Translations\InnoSetup\Brazilian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Brazilian.txt
+Name: Romanian; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Romanian.isl,..\..\Translations\InnoSetup\Romanian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Romanian.txt
+Name: Russian; MessagesFile: compiler:Languages\Russian.isl,..\..\Translations\InnoSetup\Russian.isl
+Name: Serbian; MessagesFile: compiler:Languages\SerbianCyrillic.isl,..\..\Translations\InnoSetup\Serbian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Serbian.txt
+Name: Sinhala; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Sinhala.islu,..\..\Translations\InnoSetup\Sinhala.islu
+Name: Slovak; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Slovak.isl,..\..\Translations\InnoSetup\Slovak.isl
+Name: Slovenian; MessagesFile: compiler:Languages\Slovenian.isl,..\..\Translations\InnoSetup\Slovenian.isl
+Name: Spanish; MessagesFile: compiler:Languages\Spanish.isl,..\..\Translations\InnoSetup\Spanish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Spanish.txt
+Name: Swedish; MessagesFile: ..\..\Translations\InnoSetup\Unbundled.is5\Swedish.isl,..\..\Translations\InnoSetup\Swedish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Swedish.txt
+Name: Turkish; MessagesFile: compiler:Languages\Turkish.isl,..\..\Translations\InnoSetup\Turkish.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Turkish.txt
+Name: Ukrainian; MessagesFile: compiler:Languages\Ukrainian.isl,..\..\Translations\InnoSetup\Ukrainian.isl; InfoAfterFile: ..\..\Translations\Docs\Readme\ReadMe-Ukrainian.txt
 
 
 [Messages]
@@ -357,6 +354,7 @@ Name: {app}\MergePlugins\list.txt; Type: files; Check: not IsComponentSelected('
 
 ;Removes the user's guide icon if the user deselects the user's guide component.
 Name: {group}\{cm:UsersGuide}.lnk; Type: files; Check: not IsComponentSelected('Docs')
+Name: {group}\{cm:ReadMe}.lnk; Type: files
 
 ;This removes the quick launch icon in case the user chooses not to install it after previously having it installed
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\WinMerge.lnk; Type: files; Check: not IsTaskSelected('QuickLauchIcon')
@@ -368,10 +366,12 @@ Name: {commondesktop}\WinMerge.lnk; Type: files; Check: not IsTaskSelected('Desk
 
 ;Removes the Uninstall icon from the start menu...
 Name: {group}\{cm:UninstallProgram,WinMerge}.lnk; Type: files;
+Name: {group}\{cm:UninstallProgram,WinMerge}; Type: files;
 
 ;Remove ANSI executable link from start menu for NT-based Windows versions
 ;This was installed earlier, but not anymore.
 Name: {group}\WinMerge (ANSI).lnk; Type: files; MinVersion: 0,4
+
 Name: {app}\Docs; Type: filesandordirs
 
 Name: {app}\MergePlugins\editor addin.sct; Type: Files; Check: not IsComponentSelected('Plugins')
@@ -392,6 +392,8 @@ Name: {app}\Filters\XML_html.flt; Type: Files; Check: not IsComponentSelected('F
 Name: {app}\Filters\FileFilter.tmpl; Type: Files; Check: not IsComponentSelected('Filters')
 Name: {app}\Filters; Type: DirIfEmpty; Check: not IsComponentSelected('Filters')
 
+;Remove old "List of installed files"...
+Name: {app}\Files.txt; Type: files
 
 
 [Dirs]
@@ -401,20 +403,21 @@ Name: {app}; Flags: uninsalwaysuninstall
 
 [Files]
 ; WinMerge itself
-Source: ..\..\Build\X64\MergeUnicodeRelease\WinMergeU.exe; DestDir: {app}; Flags: promptifolder; Components: Core
+Source: ..\..\Build\X64\Release\WinMergeU.exe; DestDir: {app}; Flags: promptifolder; Components: Core
+; Visual Elements
+Source: ..\..\Build\X64\Release\WinMergeU.VisualElementsManifest.xml; DestDir: {app}; Flags: promptifolder; Components: Core
+Source: ..\..\Build\X64\Release\LogoImages\*.png; DestDir: {app}\LogoImages; Flags: promptifolder; Components: Core
 ; 32Bit Plugin Proxy
 Source: ..\..\Plugins\WinMerge32BitPluginProxy\Release\WinMerge32BitPluginProxy.exe; DestDir: {app}; Flags: promptifolder; Components: Core
 
-; List of installed files
-Source: ..\..\Docs\Users\Files.txt; DestDir: {app}; Flags: promptifolder; Components: Core
-
 ; Shell extension
-Source: ..\..\Build\ShellExtension\ShellExtensionU.dll; DestDir: {app}; Flags: regserver uninsrestartdelete restartreplace promptifolder; MinVersion: 0, 4; Check: not IsWin64
+Source: ..\..\Build\ShellExtension\ShellExtensionU.dll; DestDir: {app}; Flags: regserver uninsrestartdelete restartreplace promptifolder 32bit; MinVersion: 0, 4; Components: ShellExtension32bit; Check: not AreSourceAndDestinationOfShellExtensionSame(ExpandConstant('{app}\ShellExtensionU.dll'))
 ; 64-bit version of ShellExtension
-Source: ..\..\Build\ShellExtension\ShellExtensionX64.dll; DestDir: {app}; Flags: regserver uninsrestartdelete restartreplace promptifolder 64bit; MinVersion: 0,5.01.2600; Check: IsWin64
+Source: ..\..\Build\ShellExtension\ShellExtensionX64.dll; DestDir: {app}; Flags: regserver uninsrestartdelete restartreplace promptifolder 64bit; MinVersion: 0,5.01.2600; Check: IsWin64 and not AreSourceAndDestinationOfShellExtensionSame(ExpandConstant('{app}\ShellExtensionX64.dll'))
 
+; ArchiveSupport
 ;Please do not reorder the 7z Dlls by version they compress better ordered by platform and then by version
-Source: ..\..\Build\X64\Merge7z\Merge7z1806U.dll; DestDir: {app}\Merge7z; Flags: promptifolder; MinVersion: 0, 4; Components: ArchiveSupport
+Source: ..\..\Build\X64\Merge7z\Merge7z.dll; DestDir: {app}\Merge7z; Flags: promptifolder; MinVersion: 0, 4; Components: ArchiveSupport
 Source: ..\..\Build\X64\Merge7z\7z.dll; DestDir: {app}\Merge7z; Flags: promptifolder; MinVersion: 0, 4; Components: ArchiveSupport
 Source: ..\..\Build\X64\Merge7z\*.txt; DestDir: {app}\Merge7z; Flags: promptifolder; MinVersion: 0, 4; Components: ArchiveSupport
 Source: ..\..\Build\X64\Merge7z\Lang\*.txt; DestDir: {app}\Merge7z\Lang; Flags: promptifolder; MinVersion: 0, 4; Components: ArchiveSupport
@@ -449,6 +452,7 @@ Source: ..\..\Translations\WinMerge\Greek.po; DestDir: {app}\Languages; Componen
 Source: ..\..\Translations\Docs\Readme\ReadMe-Greek.txt; DestDir: {app}\Docs; Components: Languages\Greek
 Source: ..\..\Translations\WinMerge\Hungarian.po; DestDir: {app}\Languages; Components: Languages\Hungarian; Flags: ignoreversion comparetimestamp
 Source: ..\..\Translations\WinMerge\Italian.po; DestDir: {app}\Languages; Components: Languages\Italian; Flags: ignoreversion comparetimestamp
+Source: ..\..\Translations\Docs\Readme\ReadMe-Italian.txt; DestDir: {app}\Docs; Components: Languages\Italian
 Source: ..\..\Translations\WinMerge\Japanese.po; DestDir: {app}\Languages; Components: Languages\Japanese; Flags: ignoreversion comparetimestamp
 Source: ..\..\Translations\Docs\Readme\ReadMe-Japanese.txt; DestDir: {app}\Docs; Components: Languages\Japanese
 Source: ..\..\Translations\WinMerge\Korean.po; DestDir: {app}\Languages; Components: Languages\Korean; Flags: ignoreversion comparetimestamp
@@ -475,6 +479,7 @@ Source: ..\..\Translations\Docs\Readme\ReadMe-Turkish.txt; DestDir: {app}\Docs; 
 Source: ..\..\Translations\WinMerge\Ukrainian.po; DestDir: {app}\Languages; Components: Languages\Ukrainian; Flags: ignoreversion comparetimestamp
 Source: ..\..\Translations\Docs\Readme\ReadMe-Ukrainian.txt; DestDir: {app}\Docs; Components: Languages\Ukrainian
 
+;Filters
 Source: ..\..\Filters\*.flt; DestDir: {app}\Filters; Flags: sortfilesbyextension comparetimestamp ignoreversion; Components: filters
 Source: ..\..\Filters\FileFilter.tmpl; DestDir: {app}\Filters; Flags: sortfilesbyextension comparetimestamp ignoreversion; Components: filters
 
@@ -530,39 +535,15 @@ Name: "{app}\MergePlugins"
 
 [Icons]
 ;Start Menu Icons
-Name: {group}\WinMerge; Filename: {app}\{code:ExeName}; AppUserModelID: "Thingamahoochie.WinMerge"
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe.txt; IconFileName: {win}\NOTEPAD.EXE
+Name: {group}\WinMerge; Filename: {app}\WinMergeU.exe; AppUserModelID: "Thingamahoochie.WinMerge"
 Name: {group}\{cm:UsersGuide}; Filename: {app}\Docs\WinMerge.chm
-Name: {group}\{cm:UninstallProgram,WinMerge}; Filename: {uninstallexe}
-Name: {group}\{cm:ProgramOnTheWeb,WinMerge}; Filename: http://winmerge.org
-
-;Link to translated ReadMe in Start Menu
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Basque.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Basque
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Brazilian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: PortugueseBrazilian
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Bulgarian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Bulgarian
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Catalan.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Catalan
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-ChineseSimplified.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Chinese_Simplified
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-ChineseTraditional.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Chinese_Traditional
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Croatian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Croatian
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Dutch.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Dutch
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Finnish.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Finnish
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-French.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: French
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Galician.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Galician
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Greek.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Greek
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Japanese.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Japanese
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Portuguese.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Portuguese
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Romanian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Romanian
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Serbian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Serbian
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Spanish.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Spanish
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Swedish.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Swedish
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Turkish.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Turkish
-Name: {group}\{cm:ReadMe}; Filename: {app}\Docs\ReadMe-Ukrainian.txt; IconFileName: {win}\NOTEPAD.EXE; Languages: Ukrainian
+Name: {group}\{cm:ProgramOnTheWeb,WinMerge}; Filename: https://winmerge.org
 
 ;Desktop Icon
-Name: {commondesktop}\WinMerge; Filename: {app}\{code:ExeName}; Tasks: desktopicon
+Name: {commondesktop}\WinMerge; Filename: {app}\WinMergeU.exe; Tasks: desktopicon
 
 ;Quick Launch Icon
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\WinMerge; Filename: {app}\{code:ExeName}; Tasks: quicklaunchicon
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\WinMerge; Filename: {app}\WinMergeU.exe; Tasks: quicklaunchicon
 
 [Registry]
 Root: HKCU; Subkey: Software\Thingamahoochie; Flags: uninsdeletekeyifempty
@@ -575,9 +556,9 @@ Root: HKLM; Subkey: Software\Thingamahoochie\WinMerge; Flags: uninsdeletekey
 ;set Notepad to edit project files
 Root: HKCR; Subkey: .WinMerge; ValueType: String; ValueData: WinMerge.Project.File; Flags: uninsdeletekey
 Root: HKCR; Subkey: WinMerge.Project.File; ValueType: String; ValueData: {cm:ProjectFileDesc}; Flags: uninsdeletekey
-Root: HKCR; Subkey: WinMerge.Project.File\shell\open\command; ValueType: String; ValueData: """{app}\{code:ExeName}"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: WinMerge.Project.File\shell\open\command; ValueType: String; ValueData: """{app}\WinMergeU.exe"" ""%1"""; Flags: uninsdeletekey
 Root: HKCR; Subkey: WinMerge.Project.File\shell\edit\command; ValueType: String; ValueData: """NOTEPAD.EXE"" ""%1"""; Flags: uninsdeletekey
-Root: HKCR; Subkey: WinMerge.Project.File\DefaultIcon; ValueType: String; ValueData: """{app}\{code:ExeName}"",1"; Flags: uninsdeletekey
+Root: HKCR; Subkey: WinMerge.Project.File\DefaultIcon; ValueType: String; ValueData: """{app}\WinMergeU.exe"",1"; Flags: uninsdeletekey
 
 ; delete obsolete values
 ;In Inno Setup Version 4.18 ValueData couldn't be null and compile,
@@ -596,11 +577,11 @@ Root: HKCR; SubKey: Directory\Shell\WinMerge; ValueType: none; Flags: deletekey 
 ;Adds "Start Menu" --> "Run" Support for WinMerge
 Root: HKLM; Subkey: Software\Microsoft\Windows\CurrentVersion\App Paths\WinMerge.exe; ValueType: none; Flags: uninsdeletekey
 Root: HKLM; Subkey: Software\Microsoft\Windows\CurrentVersion\App Paths\WinMergeU.exe; ValueType: none; Flags: uninsdeletekey
-Root: HKLM; SubKey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinMerge.exe; ValueType: string; ValueName: ; ValueData: {app}\{code:ExeName}
-Root: HKLM; SubKey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinMergeU.exe; ValueType: string; ValueName: ; ValueData: {app}\{code:ExeName}
+Root: HKLM; SubKey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinMerge.exe; ValueType: string; ValueName: ; ValueData: {app}\WinMergeU.exe
+Root: HKLM; SubKey: SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\WinMergeU.exe; ValueType: string; ValueName: ; ValueData: {app}\WinMergeU.exe
 
 ;Registry Keys for use by ShellExtension.dll
-Root: HKLM; SubKey: Software\Thingamahoochie\WinMerge; ValueType: string; ValueName: Executable; ValueData: {app}\{code:ExeName}
+Root: HKLM; SubKey: Software\Thingamahoochie\WinMerge; ValueType: string; ValueName: Executable; ValueData: {app}\WinMergeU.exe
 
 ;Enables or disables the Context Menu preference based on what the user selects during install
 ;Initially the Context menu is explicitly disabled:
@@ -611,24 +592,24 @@ Root: HKLM; SubKey: Software\Thingamahoochie\WinMerge; ValueType: dword; ValueNa
 Root: HKCU; SubKey: Software\Thingamahoochie\WinMerge; ValueType: dword; ValueName: ContextMenuEnabled; ValueData: {code:ShellMenuEnabled}
 
 ;If WinMerge.exe is installed then we'll automatically configure WinMerge as the differencing application
-Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: string; ValueName: External Diff Application; ValueData: {app}\{code:ExeName}; Flags: uninsdeletevalue; Tasks: TortoiseCVS
+Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: string; ValueName: External Diff Application; ValueData: {app}\WinMergeU.exe; Flags: uninsdeletevalue; Tasks: TortoiseCVS
 Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: dword; ValueName: DiffAsUnicode; ValueData: $00000001; Flags: uninsdeletevalue; Tasks: TortoiseCVS
-Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Diff Application; ValueType: string; ValueName: _; ValueData: {app}\{code:ExeName}; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
+Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Diff Application; ValueType: string; ValueName: _; ValueData: {app}\WinMergeU.exe; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
 Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Diff2 Params; ValueType: string; ValueName: _; ValueData: """%1"" ""%2"""; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
 
 ;Tells TortoiseCVS to use WinMerge as its differencing application (this happens whether or not Tortoise is current installed, that way
 ;if it is installed at a later date this will automatically support it)
-Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: string; ValueName: External Merge Application; ValueData: {app}\{code:ExeName}; Flags: uninsdeletevalue; Tasks: TortoiseCVS
+Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: string; ValueName: External Merge Application; ValueData: {app}\WinMergeU.exe; Flags: uninsdeletevalue; Tasks: TortoiseCVS
 Root: HKCU; SubKey: Software\TortoiseCVS; ValueType: dword; ValueName: MergeAsUnicode; ValueData: $00000001; Flags: uninsdeletevalue; Tasks: TortoiseCVS
-Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Merge Application; ValueType: string; ValueName: _; ValueData: {app}\{code:ExeName}; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
+Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Merge Application; ValueType: string; ValueName: _; ValueData: {app}\WinMergeU.exe; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
 Root: HKCU; SubKey: Software\TortoiseCVS\Prefs\External Merge2 Params; ValueType: string; ValueName: _; ValueData: """%mine"" ""%yours"""; Flags: uninsdeletevalue dontcreatekey; Tasks: TortoiseCVS
 
 ;Set WinMerge as TortoiseGit diff tool
-Root: HKCU; SubKey: Software\TortoiseGit; ValueType: string; ValueName: Diff; ValueData: {app}\{code:ExeName} -e -ub -dl %bname -dr %yname %base %mine; Flags: uninsdeletevalue; Tasks: TortoiseGit
+Root: HKCU; SubKey: Software\TortoiseGit; ValueType: string; ValueName: Diff; ValueData: {app}\WinMergeU.exe -e -ub -dl %bname -dr %yname %base %mine; Flags: uninsdeletevalue; Tasks: TortoiseGit
 Root: HKCU; SubKey: Software\TortoiseGit; ValueType: string; ValueName: Merge; ValueData: {code:TortoiseSVNGITMergeToolCommandLine}; Flags: uninsdeletevalue; Check: UseAs3WayMergeTool
 
 ;Set WinMerge as TortoiseSVN diff tool
-Root: HKCU; SubKey: Software\TortoiseSVN; ValueType: string; ValueName: Diff; ValueData: {app}\{code:ExeName} -e -ub -dl %bname -dr %yname %base %mine; Flags: uninsdeletevalue; Tasks: TortoiseSVN
+Root: HKCU; SubKey: Software\TortoiseSVN; ValueType: string; ValueName: Diff; ValueData: {app}\WinMergeU.exe -e -ub -dl %bname -dr %yname %base %mine; Flags: uninsdeletevalue; Tasks: TortoiseSVN
 Root: HKCU; SubKey: Software\TortoiseSVN; ValueType: string; ValueName: Merge; ValueData: {code:TortoiseSVNGITMergeToolCommandLine}; Flags: uninsdeletevalue; Check: UseAs3WayMergeTool
 
 ;Whatever the user chooses at the [Select Setup Language] dialog should also determine what language WinMerge will start up in
@@ -674,7 +655,7 @@ Root: HKLM; SubKey: Software\Thingamahoochie\WinMerge\Locale; ValueType: dword; 
 ;This will no longer appear unless the user chose to make a start menu group in the first place
 Filename: {win}\Explorer.exe; Description: {cm:ViewStartMenuFolder}; Parameters: """{group}"""; Flags: waituntilidle postinstall skipifsilent unchecked; Check: GroupCreated
 
-Filename: {app}\{code:ExeName}; Description: {cm:LaunchProgram,WinMerge}; Flags: nowait postinstall skipifsilent runmaximized
+Filename: {app}\WinMergeU.exe; Description: {cm:LaunchProgram,WinMerge}; Flags: nowait postinstall skipifsilent runmaximized
 
 Filename: {app}\WinMerge32BitPluginProxy.exe; Parameters: "/RegServer"; Flags: waituntilidle
 
@@ -726,239 +707,6 @@ Begin
     Else
         Msgbox('The group "' + ExpandConstant('group') + '" doesn''t exist.', mbInformation, mb_ok); }
 End;
-
-
-{Returns the appropriate name of the .EXE being installed}
-Function ExeName(Unused: string): string;
-Begin
-  Result := 'WinMergeU.exe';
-End;
-
-Function FixVersion(strInput: string): string;
-{Returns a version with four segments A.B.C.D}
-Var
-  {Stores the number of periods found within the version string}
-  intPeriods: integer;
-
-  {Creates a counter}
-  i: integer;
-
-  {Generates the string to be returned to the user}
-  strVersion: string;
-Begin
-
-  {Creates a copy of the input string before we tear it apart}
-  strVersion := strInput;
-
-  {Until strInput is empty do..}
-  While Length(strInput) > 0 do
-    Begin
-      {if the first character of the input string is a period then}
-      If Copy(strInput, 1, 1) = '.' Then
-
-        {Incriment the number of periods found}
-        intPeriods := intPeriods + 1;
-
-      {Remove the first character from the Input string}
-      strInput := Copy(strINput, 2, length(strINput));
-    End;
-
-  {For every period shy of 3 do..}
-  For i := 1 to 3 - intperiods do
-
-    {Add a '.0' to the version string}
-    strVersion := strVersion + '.0';
-
-  {Returns the Version string with the correct number of segments}
-  Result := strVersion;
-
-End;
-
-Function RemoveLeadingZeros(strInput: string): string;
-{Removes the leading zeros if any from a numeric string}
-Begin
-
-  {While the first character of the string is a zero}
-  While Copy(strInput, 1, 1) = '0' Do
-    begin
-
-    {Removes one leading zero from the input string}
-      strInput := Copy(strInput, 2, Length(strINput));
-    end;
-
-  {Returns the formatted string}
-  Result := strInput;
-
-End;
-
-
-{Returns whether or not the version string detected is meets the version number requirement}
-Function VersionAtLeast(strVersion_Installed: string; intMajor: integer; intMinor: integer; intRevision: integer; intBuild: integer): boolean;
-Var
-
-  {Stores the Major of the Version installed (X.0.0.0)}
-  intMajor_Installed: Integer;
-
-  {Stores the Minor of the Version installed (1.X.0.0)}
-  intMinor_Installed: Integer;
-
-  {Stores the Revision of the Version installed (1.0.X.0)}
-  intRevision_Installed: Integer;
-
-  {Stores the Revision of the Version installed (1.0.0.X)}
-  intBuild_Installed: Integer;
-
-  {Stores the last valid character of a particular segment (Major, Minor, Revision) of the Version string}
-  intEnd_Pos: Integer;
-
-begin
-  {Debug
-  Msgbox('The version installed is ' + strVersion_Installed + ' and the required version is ' + IntToStr(intMajor) + '.' + IntToStr(intMinor) + '.' + IntToStr(intRevision) + '.' + IntToStr(intBuild), mbINformation, mb_OK)
-        }
-
-  {Makes sure the version string contains four numberic segments 5.2 ---> 5.2.0.0}
-  strVersion_Installed := FixVersion(strVersion_Installed);
-
-  {If the version number is empty then quit the function}
-  if strVersion_Installed = '' Then
-    begin
-      Result := False;
-
-      {Stops analyzing the version installed and returns that the version installed was inadequate}
-      exit;
-    end;
-
-  {Starts detecting the Major value of the Version Installed}
-
-  {Sets the end position equal to one character before the first period in the version number}
-  intEnd_Pos := Pos('.', strVersion_Installed) -1
-
-  {Sets the major version equal to all character before the first period }
-  intMajor_installed := StrToIntDef(RemoveLeadingZeros(Copy(strVersion_Installed, 1, intEnd_Pos)), 0);
-
-  {Debug
-  msgbox('The Major version installed is ' + IntToStr(intMajor_installed) + ' and the required Major is ' + IntToStr(intMajor) + '.', mbInformation, MB_OK)
-        }
-
-  {If the Major Version Installed is greater than the required value then...}
-  if intMajor_Installed > intMajor Then
-    begin
-      {Returns that the version number was adequate, since it actually exceeded the requirement}
-      Result := True;
-
-        {Debug
-        msgbox(IntToStr(intMajor_installed) + ' > ' +  IntToStr(intMajor), mbInformation, MB_OK)
-        }
-
-      {Stops analyzing the version number since we already know it met the requirement}
-      exit;
-    end;
-
-  {If the Major version installed is less than the requirement then...}
-  If intMajor_Installed < intMajor Then
-    begin
-      {Debug
-       msgbox(IntToStr(intMajor_installed) + ' < ' +  IntToStr(intMajor), mbInformation, MB_OK)
-       }
-
-      Result := False;
-
-      {Stops analyzing the version number since we already know it's inadequate and returns False (inadequate)}
-      exit;
-    end;
-
-
-  {Starts detecting the Minor version of the Version Installed}
-
-  {Modifies strVersion_Installed removing the first period and everything prior to it (Removes the Major Version)}
-  strVersion_Installed := Copy(strVersion_Installed, intEnd_Pos + 2, Length(strVersion_Installed));
-
-  {Sets the end position equal to one character before the first period in the version number}
-  intEnd_Pos := Pos('.', strVersion_Installed) -1
-
-  {Sets the Minor version equal to all character before the first period }
-	intMinor_installed := StrToIntDef(RemoveLeadingZeros(Copy(strVersion_Installed, 1, intEnd_Pos)), 0)
-
-	{Debug
-  msgbox('The Minor version installed is ' + IntToStr(intMinor_installed) + ' and the required Minor is ' + IntToStr(intMinor) + '.', mbInformation, MB_OK)
-        }
-
-	{If the Minor Version Installed is greater than the required value then...}
-	If intMinor_Installed > intMinor Then
-    begin
-      {Returns that the version number was adequate}
-      Result := True;
-
-      {Stops further analyzation of the version number}
-      exit
-    end;
-
-  {If the minor installed is less than what was required}
-  If intMinor_Installed < intMinor Then
-    Begin
-      Result := False;
-
-      {Returns that the version installed did not meet the required value and stops analyzing the version number}
-      exit;
-    end;
-
-
-  {Starts Detecting the Revision of the Version Installed}
-
-	{Modifies strVersion_Installed removing the first period and everything prior to it (Removes the Minor Version)}
-	strVersion_Installed := Copy(strVersion_Installed, intEnd_Pos + 2, Length(strVersion_Installed));
-
-	{Sets the last character of the Revision to last character before the first period}
-	intEnd_Pos := Pos('.', strVersion_Installed) -1
-
-	{Sets the Revision Installed equal to everything before the first period}
-	intRevision_Installed := strToIntDef(RemoveLeadingZeros(Copy(strVersion_Installed, 1, intEnd_Pos)), 0);
-
-	{Debug
-  msgbox('The Revision version installed is ' + IntToStr(intRevision_installed) + ' and the required Revision is ' + IntToStr(intRevision) + '.', mbInformation, MB_OK)
-        }
-
-	{If the Revision Installed is greater than the required value then...}
-  If intRevision_Installed > intRevision Then
-    begin
-      {Return that the version installed was adequate}
-      Result := True;
-
-      {Stops further analyzation of the version number}
-      exit
-    end;
-
-  {If the revision installed did not meet the requirement then...}
-  If intRevision_Installed < intRevision Then
-    begin
-      Result := False;
-
-    {Return that the version number failed to meet the requirement and stops further analyzation of the version number}
-      exit;
-    end;
-
-  {Start Detection the Build Installed}
-
-	{Modifies strVersion_Installed removing the first period and everything prior to it (Removes the Revision) leaving behind only the build number}
-	strVersion_Installed := Copy(strVersion_Installed, intEnd_Pos + 2, Length(strVersion_Installed));
-
-	{Set the build installed = to what's left of the strVersion_Installed text}
-	intBuild_installed := strToIntDef(RemoveLeadingZeros(strVersion_Installed), 0);
-
-	{Debug
-  msgbox('The Build version installed is ' + IntToStr(intBuild_installed) + ' and the required Build is ' + IntToStr(intBuild) + '.', mbInformation, MB_OK)
-        }
-
-	{If the build installed is greater than or equal to the requirement then...}
-	if intBuild_installed >= intBuild Then
-
-	 {Report that the version installed was adequate}
-    Result := True
-  else
-
-    {Reports the inadequacy of the version installed and seases processing }
-    Result := False;
-end;
 
 
 {Determines whether or not TortoiseCVS is installed}
@@ -1045,32 +793,6 @@ Begin
     Result := '0';
 End;
 
-{Replace one occurrence of OldStr in Str with NewStr}
-Function ReplaceSubString(Src: string; OldStr: string; NewStr: string) : string;
-Var
-    OldStrStartAt: Integer;
-
-Begin
-    OldStrStartAt := Pos(OldStr, Src);
-    if OldStrStartAt > 0 then
-    begin
-        {Remove old string}
-        Delete(Src, OldStrStartAt, Length(OldStr));
-        {Insert new string}
-        Insert(NewStr, Src, OldStrStartAt);
-    end;
-    Result := Src;
-End;
-
-{Returns WinMerge installed exeutable file name}
-Function WinMergeExeName(): string;
-Var
-	Unused: String;
-
-Begin
-    Result := ExpandConstant('{app}\') + ExeName(Unused);
-End;
-
 // Add WinMerge to system path.
 // This requires certain order of things to work:
 // #1 ModPathDir function must be first (it gets called by others)
@@ -1109,7 +831,7 @@ begin
     if g_CheckListBox.Checked[4] then begin
         Args := Args + ' /a' + lmr;
     end;
-    Result := WinMergeExeName() + ' ' + Args;
+    Result := ExpandConstant('{app}\WinMergeU.exe') + ' ' + Args;
 end;
 
 function ThreeWayMergePage_ShouldSkipPage(Page: TWizardPage): Boolean;
@@ -1153,6 +875,18 @@ end;
 function StringToBoolean(Value : String) : Boolean; 
 begin
   if Value = 'true' then
+    Result := true
+  else
+    Result := false;
+end;
+
+function AreSourceAndDestinationOfShellExtensionSame(Filename: String) : Boolean;
+var
+  ver: String;
+begin
+  ver := ''
+  GetVersionNumbersString(Filename, ver);
+  if ver = ExpandConstant('{#ShellExtensionVersion}') then
     Result := true
   else
     Result := false;

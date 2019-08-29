@@ -18,6 +18,7 @@
 #include "PropTextColors.h"
 #include "PropSyntaxColors.h"
 #include "PropMarkerColors.h"
+#include "PropDirColors.h"
 #include "PropCodepage.h"
 #include "PropArchive.h"
 #include "PropBackups.h"
@@ -62,6 +63,7 @@ protected:
 	PropTextColors m_pageTextColors;
 	PropSyntaxColors m_pageSyntaxColors;
 	PropMarkerColors m_pageMarkerColors;
+	PropDirColors m_pageDirColors;
 	PropArchive m_pageArchive;
 	PropBackups m_pageBackups;
 	PropShell m_pageShell;
@@ -85,7 +87,7 @@ protected:
 protected:
 	// Generated message map functions
 	//{{AFX_MSG(CPreferencesDlg)
-	virtual BOOL OnInitDialog();
+	virtual BOOL OnInitDialog() override;
 	afx_msg void OnDestroy();
 	afx_msg void OnHelpButton();
 	afx_msg void OnImportButton();

@@ -27,6 +27,7 @@
 
 #include "SplitterWndEx.h"
 #include "EditorFilepathBar.h"
+#include "MergeFrameCommon.h"
 
 #define HEKSEDIT_INTERFACE_VERSION 2
 #include "heksedit.h"
@@ -36,7 +37,7 @@ class CHexMergeDoc;
 /** 
  * @brief Frame class for file compare, handles panes, statusbar etc.
  */
-class CHexMergeFrame : public CMDIChildWnd
+class CHexMergeFrame : public CMergeFrameCommon
 {
 	DECLARE_DYNCREATE(CHexMergeFrame)
 public:
@@ -47,13 +48,12 @@ public:
 	void UpdateResources();
 	void CloseNow();
 	IHeaderBar * GetHeaderInterface();
-	void SetSharedMenu(HMENU hMenu) { m_hMenuShared = hMenu; };
 	CHexMergeDoc * GetMergeDoc() { return m_pMergeDoc; }
-	void SetLastCompareResult(int nResult);
 
 	void UpdateAutoPaneResize();
 	void UpdateSplitter();
-
+	int GetActivePane();
+	void SetActivePane(int nPane);
 
 // Attributes
 protected:
@@ -78,18 +78,20 @@ private:
 	void CreateHexWndStatusBar(CStatusBar &, CWnd *);
 // Generated message map functions
 private:
-	int m_nLastSplitPos[2];
 	void UpdateHeaderSizes();
 	CHexMergeDoc * m_pMergeDoc;
-	HICON m_hIdentical;
-	HICON m_hDifferent;
 
 	//{{AFX_MSG(CHexMergeFrame)
 	afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnIdleUpdateCmdUI();
 	afx_msg LRESULT OnStorePaneSizes(WPARAM wParam, LPARAM lParam);
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
+
+inline IHeaderBar *CHexMergeFrame::GetHeaderInterface()
+{
+	return &m_wndFilePathBar;
+}
+

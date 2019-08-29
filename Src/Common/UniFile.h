@@ -71,6 +71,32 @@ public:
 };
 
 /**
+ * @brief Check if there is error.
+ * @return true if there is an error.
+ */
+inline bool UniFile::UniError::HasError() const
+{
+	return !desc.empty();
+}
+
+/**
+ * @brief Clears the existing error.
+ */
+inline void UniFile::UniError::ClearError()
+{
+	desc.erase();
+}
+
+/**
+ * @brief Get the error string.
+ * @return Error string.
+ */
+inline String UniFile::UniError::GetError() const
+{
+	return desc;
+}
+
+/**
  * @brief Local file access code used by both UniMemFile and UniStdioFile
  *
  * This class lacks an actual handle to a file
@@ -81,13 +107,13 @@ public:
 	UniLocalFile();
 	void Clear();
 
-	virtual String GetFullyQualifiedPath() const { return m_filepath; }
-	virtual const UniError & GetLastUniError() const { return m_lastError; }
+	virtual String GetFullyQualifiedPath() const override { return m_filepath; }
+	virtual const UniError & GetLastUniError() const override { return m_lastError; }
 
-	virtual ucr::UNICODESET GetUnicoding() const { return m_unicoding; }
-	virtual void SetUnicoding(ucr::UNICODESET unicoding) { m_unicoding = unicoding; }
-	virtual int GetCodepage() const { return m_codepage; }
-	virtual void SetCodepage(int codepage) { 
+	virtual ucr::UNICODESET GetUnicoding() const override { return m_unicoding; }
+	virtual void SetUnicoding(ucr::UNICODESET unicoding) override { m_unicoding = unicoding; }
+	virtual int GetCodepage() const override { return m_codepage; }
+	virtual void SetCodepage(int codepage) override { 
 		m_codepage = codepage;
 		switch (m_codepage)
 		{
@@ -110,10 +136,10 @@ public:
 		}
 	}
 
-	virtual int GetLineNumber() const { return m_lineno; }
-	virtual const txtstats & GetTxtStats() const { return m_txtstats; }
+	virtual int GetLineNumber() const override { return m_lineno; }
+	virtual const txtstats & GetTxtStats() const override { return m_txtstats; }
 
-	bool IsUnicode();
+	bool IsUnicode() override;
 
 protected:
 	virtual bool DoGetFileStatus();
@@ -153,21 +179,21 @@ public:
 
 	virtual bool GetFileStatus();
 
-	virtual bool OpenReadOnly(const String& filename);
+	virtual bool OpenReadOnly(const String& filename) override;
 	virtual bool Open(const String& filename);
 	virtual bool Open(const String& filename, AccessMode mode);
-	void Close();
-	virtual bool IsOpen() const;
+	void Close() override;
+	virtual bool IsOpen() const override;
 
-	virtual bool ReadBom();
-	virtual bool HasBom() const;
-	virtual void SetBom(bool bom);
+	virtual bool ReadBom() override;
+	virtual bool HasBom() const override;
+	virtual void SetBom(bool bom) override;
 
 public:
-	virtual bool ReadString(String & line, bool * lossy);
-	virtual bool ReadString(String & line, String & eol, bool * lossy);
-	virtual int64_t GetPosition() const { return m_current - m_base; }
-	virtual bool WriteString(const String & line);
+	virtual bool ReadString(String & line, bool * lossy) override;
+	virtual bool ReadString(String & line, String & eol, bool * lossy) override;
+	virtual int64_t GetPosition() const override { return m_current - m_base; }
+	virtual bool WriteString(const String & line) override;
 
 // Implementation methods
 protected:
@@ -180,6 +206,33 @@ private:
 	unsigned char *m_data; // similar to m_base, but after BOM if any
 	unsigned char *m_current; // current location in file
 };
+
+/** @brief Is it currently attached to a file ? */
+inline bool UniMemFile::IsOpen() const
+{
+	// We don't test the handle here, because we allow "opening" empty file
+	// but memory-mapping doesn't work on that, so that uses a special state
+	// of no handle, but linenumber of 0
+	return m_lineno >= 0;
+}
+
+/**
+ * @brief Returns if file has a BOM bytes.
+ * @return true if file has BOM bytes, false otherwise.
+ */
+inline bool UniMemFile::HasBom() const
+{
+	return m_bom;
+}
+
+/**
+ * @brief Sets if file has BOM or not.
+ * @param [in] true to have a BOM in file, false to not to have.
+ */
+inline void UniMemFile::SetBom(bool bom)
+{
+	m_bom = bom;
+}
 
 /**
  * @brief Regular buffered file (write-only access)
@@ -194,32 +247,32 @@ public:
 
 	virtual bool GetFileStatus();
 
-	virtual bool OpenReadOnly(const String& filename);
+	virtual bool OpenReadOnly(const String& filename) override;
 	virtual bool OpenCreate(const String& filename);
 	virtual bool OpenCreateUtf8(const String& filename);
 	virtual bool Open(const String& filename, const String& mode);
-	void Close();
+	void Close() override;
 
-	virtual bool IsOpen() const;
+	virtual bool IsOpen() const override;
 
-	virtual bool ReadBom();
-	virtual bool HasBom() const;
-	virtual void SetBom(bool bom);
+	virtual bool ReadBom() override;
+	virtual bool HasBom() const override;
+	virtual void SetBom(bool bom) override;
 
 protected:
-	virtual bool ReadString(String & line, bool * lossy);
-	virtual bool ReadString(String & line, String & eol, bool * lossy);
+	virtual bool ReadString(String & line, bool * lossy) override;
+	virtual bool ReadString(String & line, String & eol, bool * lossy) override;
 
 public:
-	virtual int64_t GetPosition() const;
+	virtual int64_t GetPosition() const override;
 
 	virtual int WriteBom();
-	virtual bool WriteString(const String & line);
+	virtual bool WriteString(const String & line) override;
 
 // Implementation methods
 protected:
 	virtual bool DoOpen(const String& filename, const String& mode);
-	virtual void LastErrorCustom(const String& desc);
+	virtual void LastErrorCustom(const String& desc) override;
 
 // Implementation data
 private:
@@ -227,3 +280,29 @@ private:
 	int64_t m_data; // offset after any initial BOM
 	ucr::buffer m_ucrbuff;
 };
+
+/** @brief Is it currently attached to a file ? */
+inline bool UniStdioFile::IsOpen() const
+{
+	return m_fp != 0;
+}
+
+/**
+ * @brief Returns if file has a BOM bytes.
+ * @return true if file has BOM bytes, false otherwise.
+ */
+inline bool UniStdioFile::HasBom() const
+{
+	return m_bom;
+}
+
+/**
+ * @brief Sets if file has BOM or not.
+ * @param [in] true to have a BOM in file, false to not to have.
+ */
+inline void UniStdioFile::SetBom(bool bom)
+{
+	m_bom = bom;
+}
+
+
