@@ -645,6 +645,40 @@ bool CMergeApp::ParseArgsAndDoOpen(MergeCmdLineInfo& cmdInfo, CMainFrame* pMainF
 			strDesc[2] = cmdInfo.m_sRightDesc;
 		}
 
+		if (cmdInfo.m_sArgStringLeft.length() > 0 && cmdInfo.m_sArgStringRight.length() > 0)
+		{
+			// Write data to intermediate files
+			String tempPath = env::GetTemporaryPath();
+			String sIntermediateFilename = env::GetTemporaryFileName(tempPath, _T("MRG_ARG_"), 0);
+			if (sIntermediateFilename.empty())
+				return false; //Nothing to do if even tempfile name fails
+
+			FILE* fp;
+			errno_t err;
+			err = fopen_s(&fp, ucr::toUTF8(sIntermediateFilename).c_str(), "w+");
+			if (err == 0)
+			{
+				std::string utf8 = ucr::toUTF8(cmdInfo.m_sArgStringLeft);
+				fwrite(utf8.c_str(), utf8.size(), 1, fp);
+				fclose(fp);
+				cmdInfo.AddPath(sIntermediateFilename);
+			}
+
+			tempPath = env::GetTemporaryPath();
+			sIntermediateFilename = env::GetTemporaryFileName(tempPath, _T("MRG_ARG_"), 0);
+			if (sIntermediateFilename.empty())
+				return false; //Nothing to do if even tempfile name fails
+
+			err = fopen_s(&fp, ucr::toUTF8(sIntermediateFilename).c_str(), "w+");
+			if (err == 0)
+			{
+				std::string utf8 = ucr::toUTF8(cmdInfo.m_sArgStringRight);
+				fwrite(utf8.c_str(), utf8.size(), 1, fp);
+				fclose(fp);
+				cmdInfo.AddPath(sIntermediateFilename);
+			}
+		}
+
 		if (cmdInfo.m_Files.GetSize() > 2)
 		{
 			cmdInfo.m_dwLeftFlags |= FFILEOPEN_CMDLINE;

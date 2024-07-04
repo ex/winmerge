@@ -33,6 +33,7 @@
 #include "Paths.h"
 #include "OptionsDef.h"
 #include "unicoder.h"
+#include <Poco/Base64Decoder.h>
 
 // MergeCmdLineInfo
 
@@ -194,6 +195,41 @@ void MergeCmdLineInfo::ParseWinMergeCmdLine(const TCHAR *q)
 	String param;
 	bool flag;
 
+	String s;
+	s.assign(q);
+
+	size_t pos = s.find_first_of(_T("winmergeprotocol:"));
+	size_t pos1 = s.find_first_of(_T(":"));
+	size_t pos2 = s.find_first_of(_T(","));
+	size_t pos3 = s.find_first_of(_T(","), pos2 + 1);
+
+	if (pos != std::string::npos && pos1 != std::string::npos && pos2 != std::string::npos && pos3 != std::string::npos)
+	{
+		try
+		{
+			FILE* fp;
+			std::string utf8;
+
+			utf8 = ucr::toUTF8(s.substr(pos1 + 1, pos2 - pos1 - 1));
+			std::stringstream ss1;
+			ss1 << utf8;
+			Poco::Base64Decoder decoder1(ss1);
+			std::string ds1(std::istreambuf_iterator<char>(decoder1), {});
+			m_sArgStringLeft = ucr::toTString(ds1);
+
+			utf8 = ucr::toUTF8(s.substr(pos2 + 1, pos3 - pos2 - 1));
+			std::stringstream ss2;
+			ss2 << utf8;
+			Poco::Base64Decoder decoder2(ss2);
+			std::string ds2(std::istreambuf_iterator<char>(decoder2), {});
+			m_sArgStringRight = ucr::toTString(ds2);
+		}
+		catch (...)
+		{
+		}
+		return;
+	}
+
 	while ((q = EatParam(q, param, &flag)) != 0)
 	{
 		if (!flag)
@@ -240,6 +276,16 @@ void MergeCmdLineInfo::ParseWinMergeCmdLine(const TCHAR *q)
 		{
 			// -f "mask" - file filter mask ("*.h *.cpp")
 			q = EatParam(q, m_sFileFilter);
+		}
+		else if (param == _T("xl"))
+		{
+			// -xl "left string"
+			q = EatParam(q, m_sArgStringLeft);
+		}
+		else if (param == _T("xr"))
+		{
+			// -xr "right string"
+			q = EatParam(q, m_sArgStringRight);
 		}
 		else if (param == _T("r"))
 		{

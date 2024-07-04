@@ -84,11 +84,16 @@ public:
 	String m_sOutputpath;
 	String m_sReportFile;
 
+	String m_sArgStringLeft;
+	String m_sArgStringRight;
+
 	PathContext m_Files; /**< Files (or directories) to compare. */
 
 	std::map<String, String> m_Options;
 
 	std::vector<String> m_sErrorMessages;
+
+	void AddPath(const String& path);
 
 private:
 
@@ -96,7 +101,6 @@ private:
 	const TCHAR *SetOption(const TCHAR *, const String& key, const TCHAR *value = _T("1"));
 	const TCHAR *SetConfig(const TCHAR *);
 	void ParseWinMergeCmdLine(const TCHAR *);
-	void AddPath(const String &path);
 
 	/** Operator= is not implemented. */
 	MergeCmdLineInfo& operator=(const MergeCmdLineInfo& rhs);
